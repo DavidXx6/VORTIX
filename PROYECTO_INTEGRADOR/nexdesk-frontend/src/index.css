@@ -1,0 +1,2370 @@
+:root {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body { margin: 0; min-width: 320px; }
+#root { min-height: 100vh; }
+.nexdesk-logo {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 18px;
+  background: #0d6efd;
+  color: white;
+  font-size: 2rem;
+  font-weight: 800;
+}
+pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+
+
+/* Notificación de bienvenida VORTIX */
+
+.nexdesk-toast {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 1100;
+  width: min(365px, calc(100vw - 32px));
+  overflow: hidden;
+  padding: 14px 15px 16px;
+  border: 1px solid #31527f;
+  border-radius: 13px;
+  color: #eff6ff;
+  background: linear-gradient(135deg, #12284b, #0d1b39 58%, #151344);
+  box-shadow: 0 16px 42px rgba(0, 5, 28, .42), inset 0 1px rgba(255, 255, 255, .09);
+
+  opacity: 0;
+  transform: translateY(-18px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+}
+
+.nexdesk-toast::before {
+  position: absolute;
+  top: -24px;
+  right: -24px;
+  width: 104px;
+  height: 104px;
+  content: "";
+  border: 1px solid rgba(109, 137, 255, .2);
+  border-radius: 50%;
+  box-shadow: 0 0 28px rgba(59, 124, 255, .22);
+}
+
+.nexdesk-toast.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.nexdesk-toast-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border: 1px solid rgba(94, 221, 168, .33);
+  border-radius: 11px;
+  color: #67ebb0;
+  background: linear-gradient(145deg, rgba(19, 190, 120, .29), rgba(25, 83, 106, .28));
+  box-shadow: 0 5px 14px rgba(20, 187, 115, .12);
+}
+
+.nexdesk-toast-content { position: relative; z-index: 1; display: flex; align-items: flex-start; gap: 11px; }
+.nexdesk-toast-copy { display: flex; min-width: 0; flex: 1; flex-direction: column; padding-top: 1px; }
+.nexdesk-toast-copy strong { color: #f5f8ff; font-size: 12px; font-weight: 650; }
+.nexdesk-toast-copy span { margin-top: 3px; color: #aebfda; font-size: 9px; line-height: 1.35; }
+.nexdesk-toast-close { display: grid; width: 23px; height: 23px; flex: 0 0 23px; place-items: center; margin: -2px -3px 0 0; padding: 0; border: 0; border-radius: 6px; color: #aebed8; background: transparent; font-size: 18px; line-height: 1; }
+.nexdesk-toast-close:hover { color: #fff; background: rgba(149, 174, 224, .13); }
+.nexdesk-toast-close:focus-visible { outline: 2px solid #69baff; outline-offset: 2px; }
+
+.nexdesk-toast-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  background: linear-gradient(90deg, #22d8a0, #36b9ff, #7655ff);
+  box-shadow: 0 0 10px rgba(52, 185, 255, .5);
+  transform-origin: left;
+  animation: nexdesk-progress 4.3s linear forwards;
+}
+
+@keyframes nexdesk-progress {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+
+@media (max-width: 576px) {
+  .nexdesk-toast {
+    top: 12px;
+    right: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nexdesk-toast,
+  .nexdesk-toast-progress {
+    transition: none;
+    animation: none;
+  }
+}
+
+
+/* =========================================
+   VORTIX - LAB 26.4
+   Layout principal
+========================================= */
+
+.nexdesk-app {
+  min-height: 100vh;
+  background: #f5f7fb;
+}
+
+.nexdesk-sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: 260px;
+  background: #111d35;
+  color: #fff;
+  z-index: 1040;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s ease;
+}
+
+.nexdesk-sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 26px 22px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.nexdesk-sidebar-brand strong {
+  display: block;
+  font-size: 19px;
+  letter-spacing: 0.4px;
+}
+
+.nexdesk-sidebar-brand small {
+  display: block;
+  color: #aab7cc;
+  font-size: 11px;
+}
+
+.nexdesk-brand-icon {
+  width: 42px;
+  height: 42px;
+  background: #0d6efd;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 23px;
+}
+
+.nexdesk-sidebar-label {
+  color: #8799b5;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 28px 22px 12px;
+}
+
+.nexdesk-sidebar-nav {
+  padding: 0 12px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.nexdesk-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 16px;
+  margin-bottom: 5px;
+  color: #b6c5dc;
+  text-decoration: none;
+  border-radius: 10px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.nexdesk-nav-link:hover {
+  color: #fff;
+  background: rgba(255,255,255,0.08);
+}
+
+.nexdesk-nav-link.activo {
+  color: #fff;
+  background: #0d6efd;
+  font-weight: 600;
+}
+
+.nexdesk-nav-icon {
+  width: 24px;
+  text-align: center;
+  font-size: 19px;
+}
+
+.nexdesk-sidebar-footer {
+  padding: 22px;
+  color: #c6d3e5;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  font-size: 12px;
+}
+
+.nexdesk-sidebar-footer small {
+  display: block;
+  color: #8194b1;
+  margin-top: 4px;
+}
+
+.nexdesk-online-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  margin-right: 7px;
+}
+
+.nexdesk-main {
+  margin-left: 260px;
+  min-height: 100vh;
+}
+
+.nexdesk-topbar {
+  min-height: 78px;
+  background: #fff;
+  border-bottom: 1px solid #e9edf4;
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.nexdesk-topbar-title {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  line-height: 1.15;
+}
+
+.nexdesk-topbar-title strong,
+.nexdesk-topbar-title small {
+  display: block;
+}
+
+.nexdesk-content {
+  padding: 30px;
+}
+
+.nexdesk-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #e8f0ff;
+  color: #0d6efd;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+}
+
+.nexdesk-avatar-image {
+  display: block;
+  object-fit: cover;
+  overflow: hidden;
+}
+
+.nexdesk-perfil-avatar {
+  width: 82px;
+  height: 82px;
+  flex: 0 0 82px;
+  font-size: 27px;
+  box-shadow: 0 0 0 4px rgba(74, 145, 255, .12);
+}
+
+.nexdesk-foto-feedback {
+  max-width: 245px;
+  margin: 4px 16px 8px;
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.nexdesk-admin-theme .nexdesk-content .nexdesk-perfil-avatar,
+.nexdesk-workspace-theme .nexdesk-content .nexdesk-perfil-avatar {
+  width: 82px;
+  height: 82px;
+  flex: 0 0 82px;
+  font-size: 27px;
+}
+
+.nexdesk-menu-toggle {
+  display: none;
+}
+
+.nexdesk-overlay {
+  display: none;
+}
+
+.nexdesk-module-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.nexdesk-module-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(15,23,42,0.1) !important;
+}
+
+.nexdesk-module-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 13px;
+  background: #e8f0ff;
+  color: #0d6efd;
+  display: grid;
+  place-items: center;
+  font-size: 25px;
+}
+
+@media (max-width: 991px) {
+  .nexdesk-sidebar {
+    transform: translateX(-100%);
+  }
+
+  .nexdesk-sidebar.abierto {
+    transform: translateX(0);
+  }
+
+  .nexdesk-main {
+    margin-left: 0;
+  }
+
+  .nexdesk-menu-toggle {
+    display: inline-flex;
+  }
+
+  .nexdesk-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    border: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1035;
+  }
+
+  .nexdesk-content {
+    padding: 20px 12px;
+  }
+}
+
+@media (max-width: 576px) {
+  .nexdesk-topbar {
+    padding: 12px 15px;
+  }
+
+  .nexdesk-topbar > div:first-child small,
+  .nexdesk-user-info {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nexdesk-sidebar,
+  .nexdesk-module-card,
+  .nexdesk-nav-link {
+    transition: none;
+  }
+}
+
+
+/* LAB 26.4 - Flujo interactivo de tickets */
+
+.nexdesk-flujo-scroll {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #e9edf5;
+  border-radius: 12px;
+  background: #f8faff;
+  padding: 8px;
+}
+
+.nexdesk-flujo-svg {
+  display: block;
+  width: 100%;
+  max-width: 850px;
+  min-width: 480px;
+  height: auto;
+  margin: 0 auto;
+}
+
+.nexdesk-flujo-nodo {
+  cursor: pointer;
+  outline: none;
+}
+
+.nexdesk-flujo-nodo rect {
+  transition: fill 0.2s ease, stroke-width 0.2s ease;
+}
+
+.nexdesk-flujo-nodo:hover rect,
+.nexdesk-flujo-nodo:focus-visible rect {
+  stroke-width: 3;
+}
+
+.nexdesk-flujo-detalle {
+  border: 1px solid #e5eaf3;
+  border-left: 5px solid #2563eb;
+  border-radius: 12px;
+  padding: 20px;
+  background: #ffffff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nexdesk-flujo-nodo rect {
+    transition: none;
+  }
+}
+
+/* Panel administrativo VORTIX */
+.nexdesk-admin-theme {
+  --admin-bg: #090e1d;
+  --admin-panel: #111a31;
+  --admin-panel-2: #151e37;
+  --admin-border: #273352;
+  --admin-muted: #9aa8c7;
+  --admin-text: #edf1ff;
+  --admin-purple: #8052ff;
+  min-height: 100vh;
+  color: var(--admin-text);
+  background: var(--admin-bg);
+}
+
+.nexdesk-admin-theme .nexdesk-sidebar {
+  width: 188px;
+  background: linear-gradient(180deg, #10182e 0%, #0b1226 100%);
+  border-right: 1px solid #202b49;
+  box-shadow: 8px 0 30px rgba(0, 0, 0, .14);
+}
+
+.nexdesk-admin-theme .nexdesk-sidebar-brand {
+  min-height: 61px;
+  padding: 10px 14px;
+  gap: 10px;
+  text-decoration: none;
+  border-bottom-color: #202b49;
+}
+
+.nexdesk-admin-theme .nexdesk-brand-icon {
+  width: 31px;
+  height: 31px;
+  flex: 0 0 31px;
+  border-radius: 10px;
+  background: linear-gradient(145deg, #a25aff, #5637ed 70%);
+  box-shadow: 0 5px 18px rgba(120, 71, 255, .4);
+  font-size: 19px;
+}
+
+.nexdesk-admin-theme .nexdesk-brand-copy strong {
+  color: #f8f8ff;
+  font-size: 14px;
+  letter-spacing: .25px;
+}
+
+.nexdesk-admin-theme .nexdesk-brand-copy small {
+  margin-top: 1px;
+  color: #97a4c2;
+  font-size: 9px;
+  white-space: nowrap;
+}
+
+.nexdesk-admin-theme .nexdesk-sidebar-nav {
+  padding: 0 10px 12px;
+  overflow-y: auto;
+}
+
+.nexdesk-admin-theme .nexdesk-sidebar-label {
+  padding: 19px 3px 8px;
+  color: #9ca9c4;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.nexdesk-admin-theme .nexdesk-sidebar-label-separated {
+  margin-top: 11px;
+  padding-top: 14px;
+  border-top: 1px solid #26314e;
+}
+
+.nexdesk-admin-theme .nexdesk-nav-link {
+  min-height: 31px;
+  gap: 10px;
+  padding: 7px 9px;
+  margin: 0 0 3px;
+  border-radius: 8px;
+  color: #c3cce1;
+  font-size: 10px;
+  font-weight: 400;
+  transition: background .18s ease, color .18s ease, box-shadow .18s ease;
+}
+
+.nexdesk-admin-theme .nexdesk-nav-link svg {
+  flex: 0 0 17px;
+  color: #aab6d3;
+}
+
+.nexdesk-admin-theme .nexdesk-nav-link:hover {
+  color: #fff;
+  background: rgba(132, 101, 255, .13);
+}
+
+.nexdesk-admin-theme .nexdesk-nav-link.activo {
+  color: #fff;
+  background: linear-gradient(105deg, #8847f5, #295be2);
+  box-shadow: 0 5px 15px rgba(79, 76, 255, .3), inset 0 0 0 1px rgba(255, 255, 255, .1);
+  font-weight: 600;
+}
+
+.nexdesk-admin-theme .nexdesk-nav-link.activo svg { color: #fff; }
+
+.nexdesk-sidebar-admin-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 8px 10px 10px;
+  padding: 11px 10px;
+  border: 1px solid rgba(145, 102, 255, .42);
+  border-radius: 11px;
+  background: linear-gradient(145deg, rgba(96, 55, 192, .27), rgba(20, 27, 53, .96) 58%);
+  box-shadow: 0 -7px 24px rgba(120, 73, 255, .17), inset 0 1px rgba(255, 255, 255, .06);
+}
+
+.nexdesk-sidebar-admin-card::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 20%;
+  width: 58%;
+  height: 1px;
+  background: #bd83ff;
+  box-shadow: 0 0 12px 2px #8c4cff;
+}
+
+.nexdesk-sidebar-admin-card .nexdesk-admin-crown {
+  color: #b486ff;
+  font-size: 19px;
+  line-height: 1;
+}
+
+.nexdesk-sidebar-admin-card strong {
+  color: #f2efff;
+  font-size: 10px;
+}
+
+.nexdesk-sidebar-admin-card small {
+  color: #a9b3cf;
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+.nexdesk-admin-theme .nexdesk-main { margin-left: 188px; }
+
+.nexdesk-admin-theme .nexdesk-admin-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+  min-height: 59px;
+  padding: 7px 14px;
+  gap: 12px;
+  background: rgba(13, 20, 39, .97);
+  border-bottom: 1px solid #222d4a;
+  color: var(--admin-text);
+  backdrop-filter: blur(16px);
+}
+
+.nexdesk-admin-topbar .nexdesk-topbar-left { display: flex; flex: 0 0 32%; align-items: center; min-width: 205px; gap: 10px; }
+.nexdesk-admin-topbar .nexdesk-topbar-title strong { color: #f2f4ff; font-size: 13px; font-weight: 650; }
+.nexdesk-admin-topbar .nexdesk-topbar-title small { color: #b1bbd2; font-size: 10px; }
+.nexdesk-admin-topbar .nexdesk-topbar-right { display: flex; align-items: center; gap: 8px; }
+
+.nexdesk-global-search {
+  display: flex;
+  align-items: center;
+  flex: 1 1 270px;
+  max-width: 360px;
+  height: 30px;
+  gap: 9px;
+  padding: 0 9px;
+  border: 1px solid #34415f;
+  border-radius: 10px;
+  background: #151e36;
+  color: #b6c3e0;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, .14);
+}
+
+.nexdesk-global-search:focus-within { border-color: #7866f5; box-shadow: 0 0 0 2px rgba(119, 94, 255, .14); }
+.nexdesk-global-search input { width: 100%; min-width: 0; border: 0; outline: 0; color: #eaf0ff; background: transparent; font: inherit; font-size: 9px; }
+.nexdesk-global-search input::placeholder { color: #9aa7c3; opacity: 1; }
+.nexdesk-global-search kbd { flex: 0 0 auto; padding: 2px 5px; border: 1px solid #35415d; border-radius: 5px; color: #c3cbe0; background: #1d2742; font: 9px system-ui, sans-serif; white-space: nowrap; }
+
+.nexdesk-admin-theme .nexdesk-icon-button,
+.nexdesk-admin-theme .nexdesk-user-menu {
+  color: #d7e0f6;
+  background: transparent;
+}
+
+.nexdesk-admin-theme .nexdesk-icon-button {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  padding: 0;
+  border: 1px solid #2e3a59;
+  border-radius: 10px;
+  background: #121b32;
+}
+
+.nexdesk-dark-notifications { margin-right: 3px; padding-right: 11px; border-right: 1px solid #2c3855; }
+.nexdesk-admin-theme .nexdesk-user-menu { display: flex; min-height: 38px; align-items: center; }
+.nexdesk-admin-theme .nexdesk-user-info { display: flex; min-width: max-content; flex-direction: column; gap: 2px; line-height: 1.15; white-space: nowrap; }
+.nexdesk-admin-theme .nexdesk-user-info strong,
+.nexdesk-admin-theme .nexdesk-user-info small { display: block; }
+.nexdesk-admin-theme .nexdesk-icon-button:hover,
+.nexdesk-admin-theme .nexdesk-user-menu:hover { color: #fff; border-color: #5a4c9e; background: #1b2341; }
+.nexdesk-admin-theme .nexdesk-dark-notifications .badge,
+.nexdesk-workspace-theme .nexdesk-dark-notifications .badge { font-size: 8px; border: 2px solid #10182e; }
+.nexdesk-dark-notifications .card { color: #e7ecfa; background: #151e36; border: 1px solid #303b59; }
+.nexdesk-dark-notifications .card-header,
+.nexdesk-dark-notifications .card-footer { border-color: #303b59; background: #151e36; }
+.nexdesk-dark-notifications .list-group-item { color: #dbe3f7; background: #151e36; border-color: #303b59; }
+.nexdesk-dark-notifications .list-group-item:hover { background: #202a48; }
+.nexdesk-dark-notifications .list-group-item-primary { color: #edf1ff; background: #1b2d51; }
+.nexdesk-dark-notifications .btn-outline-secondary { color: #d2daf0; border-color: #435071; }
+.nexdesk-admin-theme .nexdesk-user-menu { gap: 9px; padding: 3px 6px; border: 1px solid transparent; border-radius: 10px; }
+.nexdesk-admin-theme .nexdesk-avatar { width: 32px; height: 32px; flex: 0 0 32px; background: linear-gradient(145deg, #3387ff, #1754df); color: #fff; font-size: 13px; box-shadow: 0 0 0 3px rgba(54, 112, 255, .1); }
+.nexdesk-admin-theme .nexdesk-user-info strong { color: #f2f5ff; font-size: 10px; font-weight: 600; }
+.nexdesk-admin-theme .nexdesk-user-info small { color: #aab6d0; font-size: 9px; }
+.nexdesk-admin-theme .nexdesk-user-chevron { color: #aab6d0; font-size: 14px; }
+.nexdesk-admin-theme .dropdown-menu { background: #151e36; border: 1px solid #303b59 !important; }
+.nexdesk-admin-theme .dropdown-item,
+.nexdesk-admin-theme .dropdown-item-text { color: #dfe6f8; }
+.nexdesk-admin-theme .dropdown-item:hover { color: #fff; background: #232d4a; }
+.nexdesk-admin-theme .dropdown-divider { border-color: #34405d; }
+
+.nexdesk-admin-theme .nexdesk-content { padding: 14px 14px 18px; }
+.nexdesk-admin-theme .nexdesk-menu-toggle { color: #e6ebff; background: #18213c; border-color: #303b5c; }
+.nexdesk-admin-theme .nexdesk-content .text-secondary { color: #a7b2ce !important; }
+.nexdesk-admin-theme .nexdesk-content .text-dark { color: #eaf0ff !important; }
+.nexdesk-admin-theme .nexdesk-content .card,
+.nexdesk-admin-theme .nexdesk-content .modal-content { color: #e7ecfa; background: #111a31; border: 1px solid #293653 !important; }
+.nexdesk-admin-theme .nexdesk-content .card-header,
+.nexdesk-admin-theme .nexdesk-content .card-footer,
+.nexdesk-admin-theme .nexdesk-content .modal-header,
+.nexdesk-admin-theme .nexdesk-content .modal-footer { border-color: #2d3958; }
+.nexdesk-admin-theme .nexdesk-content .table { --bs-table-color: #d8e0f4; --bs-table-bg: transparent; --bs-table-border-color: #293653; --bs-table-striped-bg: rgba(255, 255, 255, .025); --bs-table-hover-bg: rgba(132, 99, 255, .08); color: #d8e0f4; }
+.nexdesk-admin-theme .nexdesk-users-table-wrap {
+  overflow: auto;
+  border: 1px solid #2d4169;
+  border-radius: 12px;
+  background: #0d1830;
+  box-shadow: inset 0 1px 0 rgba(166, 193, 255, .035);
+}
+.nexdesk-admin-theme .nexdesk-users-table { min-width: 860px; margin-bottom: 0; }
+.nexdesk-admin-theme .nexdesk-users-table-head th {
+  padding: 13px 12px;
+  color: #b9c9e7;
+  border-color: #344d7b;
+  background: linear-gradient(100deg, #152949, #12223d);
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: .01em;
+  white-space: nowrap;
+}
+.nexdesk-admin-theme .nexdesk-users-table tbody td {
+  padding: 14px 12px;
+  color: #dce6f7;
+  border-color: #263d65;
+  background: transparent;
+  font-size: 12px;
+}
+.nexdesk-admin-theme .nexdesk-users-table tbody tr:hover > * {
+  color: #f6f8ff;
+  background: rgba(80, 120, 222, .12);
+}
+.nexdesk-admin-theme .nexdesk-technicians-page {
+  display: flex;
+  min-height: calc(100dvh - 75px);
+  flex-direction: column;
+}
+.nexdesk-admin-theme .nexdesk-management-heading {
+  position: relative;
+  align-items: center !important;
+  padding: 4px 0 15px;
+  border-bottom: 1px solid rgba(50, 69, 109, .5);
+}
+.nexdesk-admin-theme .nexdesk-management-heading::after { position: absolute; bottom: -1px; left: 0; width: 92px; height: 2px; content: ""; border-radius: 99px; background: linear-gradient(90deg, #9a63ff, #3874ff); box-shadow: 0 0 11px rgba(135, 85, 255, .55); }
+.nexdesk-admin-theme .nexdesk-management-heading h1 { color: #f4f6ff; font-size: clamp(25px, 2vw, 31px); letter-spacing: -.55px; }
+.nexdesk-admin-theme .nexdesk-management-heading p { max-width: 650px; color: #aab9d5 !important; font-size: 13px; }
+.nexdesk-admin-theme .nexdesk-management-actions .btn { min-height: 40px; padding: 8px 14px; border-radius: 9px; font-size: 12px; }
+.nexdesk-admin-theme .nexdesk-technicians-stats { --bs-gutter-x: 13px; }
+.nexdesk-admin-theme .nexdesk-technician-stat { position: relative; overflow: hidden; border: 1px solid #2d426b !important; border-radius: 13px; background: linear-gradient(145deg, #14284b, #101c38) !important; box-shadow: inset 0 1px rgba(255, 255, 255, .035), 0 8px 20px rgba(1, 11, 31, .12) !important; }
+.nexdesk-admin-theme .nexdesk-technician-stat::before { position: absolute; top: 13px; right: 15px; width: 34px; height: 34px; content: ""; border: 1px solid rgba(151, 184, 255, .19); border-radius: 11px; background: linear-gradient(145deg, rgba(62, 128, 238, .23), rgba(112, 61, 230, .18)); }
+.nexdesk-admin-theme .nexdesk-technician-stat::after { position: absolute; right: -24px; bottom: -38px; width: 100px; height: 100px; content: ""; border: 1px solid rgba(106, 139, 244, .17); border-radius: 50%; }
+.nexdesk-admin-theme .nexdesk-technician-stat .card-body { position: relative; z-index: 1; min-height: 91px; padding: 16px; }
+.nexdesk-admin-theme .nexdesk-technician-stat .small { color: #9db0d2 !important; font-size: 11px; }
+.nexdesk-admin-theme .nexdesk-technician-stat .h3 { margin-top: 7px !important; color: #f3f6ff; font-size: 28px; }
+.nexdesk-admin-theme .nexdesk-technicians-workspace { display: grid; min-height: 0; flex: 1; grid-template-columns: minmax(0, 1.86fr) minmax(255px, .7fr); gap: 14px; }
+.nexdesk-admin-theme .nexdesk-technicians-directory { display: flex; min-height: 0; height: 100%; flex-direction: column; overflow: hidden; border: 1px solid #2d426b !important; border-radius: 15px !important; background: linear-gradient(145deg, #112541, #0e1b35) !important; box-shadow: inset 0 1px rgba(255, 255, 255, .025), 0 10px 27px rgba(1, 10, 29, .13) !important; }
+.nexdesk-admin-theme .nexdesk-technicians-directory .card-body { display: flex; min-height: 0; height: 100%; flex-direction: column; padding: 17px; }
+.nexdesk-technicians-directory-title { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.nexdesk-technicians-directory-title > div { display: flex; align-items: center; gap: 10px; }
+.nexdesk-technicians-directory-title > div > span { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 10px; color: #87c9ff; background: rgba(44, 147, 240, .16); }
+.nexdesk-technicians-directory-title h2 { margin: 0; color: #f0f5ff; font-size: 14px; font-weight: 650; }
+.nexdesk-technicians-directory-title p { margin: 3px 0 0; color: #95a9cb; font-size: 10px; }
+.nexdesk-technicians-directory-title > small { padding: 6px 9px; border: 1px solid rgba(116, 148, 204, .28); border-radius: 99px; color: #b8cae9; background: rgba(59, 93, 151, .18); font-size: 9px; white-space: nowrap; }
+.nexdesk-admin-theme .nexdesk-technicians-filters { padding: 11px; border: 1px solid rgba(50, 75, 119, .72); border-radius: 11px; background: rgba(8, 20, 45, .36); }
+.nexdesk-admin-theme .nexdesk-technicians-filters .form-label { margin-bottom: 6px; font-size: 10px; font-weight: 600; }
+.nexdesk-admin-theme .nexdesk-technicians-filters .form-control,
+.nexdesk-admin-theme .nexdesk-technicians-filters .form-select { min-height: 38px; font-size: 12px; }
+.nexdesk-admin-theme .nexdesk-technicians-table-wrap { flex: 1; margin-top: 3px; overflow: auto; border: 1px solid #2c4775; border-radius: 11px; background: rgba(8, 20, 45, .25); }
+.nexdesk-admin-theme .nexdesk-technicians-table { min-width: 710px; margin-bottom: 0; }
+.nexdesk-admin-theme .nexdesk-technicians-table-head th { padding: 12px 10px; color: #b7c8e5; border-color: #36527f; background: linear-gradient(100deg, #173054, #122642); font-size: 10px; font-weight: 650; letter-spacing: .015em; white-space: nowrap; }
+.nexdesk-admin-theme .nexdesk-technicians-table tbody td { padding: 13px 10px; color: #dce7fa; border-color: #29446e; font-size: 12px; vertical-align: middle; }
+.nexdesk-admin-theme .nexdesk-technicians-table tbody tr:hover > * { color: #f8fbff; background: rgba(67, 119, 221, .1); }
+.nexdesk-admin-theme .nexdesk-technicians-table .small { margin-top: 3px; font-size: 10px; }
+.nexdesk-admin-theme .nexdesk-technicians-table .badge { padding: 5px 8px; font-size: 9px; font-weight: 600; }
+.nexdesk-admin-theme .nexdesk-technicians-table .btn.btn-sm { min-height: 33px; padding: 6px 9px; font-size: 10px; }
+.nexdesk-admin-theme .nexdesk-technicians-table-footer { margin-top: auto; padding-top: 12px; font-size: 10px; }
+.nexdesk-admin-theme .nexdesk-categories-table-wrap { overflow: auto; border: 1px solid #2c4775; border-radius: 11px; background: rgba(8, 20, 45, .25); }
+.nexdesk-admin-theme .nexdesk-categories-table { min-width: 690px; margin-bottom: 0; }
+.nexdesk-admin-theme .nexdesk-categories-table-head th { padding: 12px 10px; color: #b7c8e5; border-color: #36527f; background: linear-gradient(100deg, #173054, #122642); font-size: 10px; font-weight: 650; letter-spacing: .015em; white-space: nowrap; }
+.nexdesk-admin-theme .nexdesk-categories-table tbody td { padding: 13px 10px; color: #dce7fa; border-color: #29446e; font-size: 12px; vertical-align: middle; }
+.nexdesk-admin-theme .nexdesk-categories-table tbody tr:hover > * { color: #f8fbff; background: rgba(67, 119, 221, .1); }
+.nexdesk-admin-theme .nexdesk-categories-table .badge { padding: 5px 8px; font-size: 9px; font-weight: 600; }
+.nexdesk-admin-theme .nexdesk-categories-table .btn.btn-sm { min-height: 33px; padding: 6px 9px; font-size: 10px; }
+.nexdesk-technicians-overview { display: flex; min-height: 0; flex-direction: column; padding: 17px; border: 1px solid #324a78; border-radius: 15px; color: #dfeaff; background: radial-gradient(circle at 50% 28%, rgba(70, 91, 255, .22), transparent 35%), linear-gradient(155deg, #152a4c, #0d1c38); box-shadow: inset 0 1px rgba(255,255,255,.04), 0 10px 27px rgba(1, 10, 29, .13); }
+.nexdesk-technicians-overview-heading { display: flex; align-items: center; gap: 9px; }
+.nexdesk-technicians-overview-heading > span { display: grid; width: 31px; height: 31px; place-items: center; border-radius: 9px; color: #c697ff; background: rgba(166, 88, 255, .17); }
+.nexdesk-technicians-overview-heading h2 { margin: 0; color: #f3f6ff; font-size: 13px; font-weight: 650; }
+.nexdesk-technicians-overview-heading p { margin: 2px 0 0; color: #9eb2d4; font-size: 9px; }
+.nexdesk-technicians-coverage { display: grid; width: 138px; height: 138px; place-items: center; margin: clamp(18px, 4vh, 34px) auto 17px; border-radius: 50%; background: conic-gradient(#8b63ff 0 var(--coverage), #263b63 var(--coverage) 100%); box-shadow: 0 0 0 8px rgba(26, 44, 82, .55), 0 14px 27px rgba(20, 35, 95, .25); }
+.nexdesk-technicians-coverage > div { display: flex; width: 105px; height: 105px; align-items: center; justify-content: center; flex-direction: column; border: 1px solid #344b76; border-radius: 50%; background: #101f3c; }
+.nexdesk-technicians-coverage strong { color: #f3f6ff; font-size: 25px; line-height: 1.05; }
+.nexdesk-technicians-coverage span { margin-top: 2px; color: #9eb4d8; font-size: 9px; }
+.nexdesk-technicians-overview-list { display: grid; gap: 7px; }
+.nexdesk-technicians-overview-list > div { display: flex; align-items: center; justify-content: space-between; padding: 9px 10px; border: 1px solid rgba(60, 85, 132, .7); border-radius: 9px; background: rgba(8, 24, 51, .37); }
+.nexdesk-technicians-overview-list span { color: #a7b9d8; font-size: 10px; }
+.nexdesk-technicians-overview-list strong { color: #f2f6ff; font-size: 14px; }
+.nexdesk-technicians-overview-tip { display: flex; align-items: flex-start; gap: 7px; margin-top: 13px; padding: 10px; border: 1px solid rgba(111, 96, 211, .34); border-radius: 9px; color: #c9b5ff; background: rgba(92, 65, 184, .14); }
+.nexdesk-technicians-overview-tip p { margin: 0; color: #bfc5e1; font-size: 9px; line-height: 1.45; }
+.nexdesk-technicians-overview-action { display: inline-flex; min-height: 38px; align-items: center; justify-content: center; gap: 7px; margin-top: auto; padding: 8px 10px; border: 1px solid #7656e7; border-radius: 9px; color: #fff; background: linear-gradient(105deg, #7045e6, #3269e3); font-size: 10px; font-weight: 600; box-shadow: 0 7px 15px rgba(66, 66, 215, .23); }
+.nexdesk-technicians-overview-action:hover:not(:disabled) { border-color: #a78bff; filter: brightness(1.08); }
+.nexdesk-technicians-overview-action:disabled { opacity: .48; cursor: not-allowed; }
+@media (max-width: 1100px) {
+  .nexdesk-admin-theme .nexdesk-technicians-workspace { grid-template-columns: 1fr; }
+  .nexdesk-technicians-overview { min-height: 280px; }
+  .nexdesk-technicians-coverage { margin: 18px auto; }
+  .nexdesk-technicians-overview-action { margin-top: 15px; }
+}
+@media (max-width: 720px) {
+  .nexdesk-admin-theme .nexdesk-technicians-page { min-height: 0; }
+  .nexdesk-admin-theme .nexdesk-management-heading { align-items: flex-start !important; }
+  .nexdesk-admin-theme .nexdesk-management-heading h1 { font-size: 24px; }
+  .nexdesk-admin-theme .nexdesk-management-actions { width: 100%; }
+  .nexdesk-admin-theme .nexdesk-management-actions .btn { flex: 1; }
+  .nexdesk-technicians-directory-title { flex-direction: column; }
+  .nexdesk-technicians-directory-title > small { align-self: flex-start; }
+  .nexdesk-admin-theme .nexdesk-technicians-directory .card-body { padding: 12px; }
+  .nexdesk-admin-theme .nexdesk-technicians-filters { padding: 9px; }
+}
+.nexdesk-admin-theme .nexdesk-content .form-control,
+.nexdesk-admin-theme .nexdesk-content .form-select { color: #e7ecfa; background-color: #0e162b; border-color: #34415f; }
+.nexdesk-admin-theme .nexdesk-content .form-control::placeholder { color: #8997b5; }
+.nexdesk-admin-theme .nexdesk-content .form-control:focus,
+.nexdesk-admin-theme .nexdesk-content .form-select:focus { border-color: #8e6bff; box-shadow: 0 0 0 .2rem rgba(142, 107, 255, .15); }
+.nexdesk-admin-theme .nexdesk-content .form-label { color: #dce4f6; }
+.nexdesk-admin-theme .nexdesk-content .modal-content .form-text { margin-top: 7px; color: #a9bbd9; font-size: 11px; line-height: 1.45; }
+.nexdesk-admin-theme .nexdesk-content .modal-content .form-text.text-warning { color: #ffd45e !important; }
+.nexdesk-admin-theme .nexdesk-content .alert-light { color: #dce4f6; background: #151f38; border-color: #2d3958; }
+.nexdesk-admin-theme .nexdesk-content .modal-backdrop { background: #02040b; }
+.nexdesk-admin-theme .nexdesk-content .list-group { border: 1px solid #2a3858; border-radius: 10px; overflow: hidden; }
+.nexdesk-admin-theme .nexdesk-content .list-group-item { color: #dce4f5; background: #121b32; border-color: #2b3858; }
+.nexdesk-admin-theme .nexdesk-content .list-group-item-action:hover { color: #fff; background: #1d2947; }
+.nexdesk-admin-theme .nexdesk-content .list-group-item.active { color: #fff; border-color: #6353dc; background: linear-gradient(100deg, #4932aa, #2856bb); }
+.nexdesk-admin-theme .nexdesk-content .list-group-item.active .text-secondary { color: #d3dcf4 !important; }
+.nexdesk-admin-theme .nexdesk-content .bg-body-tertiary { color: #e4eafb !important; background: #18223c !important; }
+.nexdesk-admin-theme .nexdesk-content .alert-success { color: #b8f4d5; border-color: #317657; background: #153d30; }
+.nexdesk-admin-theme .nexdesk-content .alert-danger { color: #ffc3ce; border-color: #864959; background: #3a202c; }
+.nexdesk-admin-theme .nexdesk-content .alert-info { color: #b7e6ff; border-color: #3b698c; background: #173650; }
+.nexdesk-admin-theme .nexdesk-content .btn-primary { border-color: #7157ee; background: linear-gradient(105deg, #6c40e8, #315de0); }
+.nexdesk-admin-theme .nexdesk-content .btn-outline-primary { color: #b7c9ff; border-color: #536eae; }
+.nexdesk-admin-theme .nexdesk-content .btn-outline-primary:hover { color: #101933; background: #b7c9ff; }
+.nexdesk-admin-theme .nexdesk-content .btn-outline-success { color: #91e8bd; border-color: #3c8765; }
+.nexdesk-admin-theme .nexdesk-content .btn-outline-success:hover { color: #092117; background: #91e8bd; }
+.nexdesk-admin-theme .nexdesk-content .btn-outline-secondary { color: #c7d0e5; border-color: #59657e; }
+.nexdesk-admin-theme .nexdesk-content .btn-outline-secondary:hover { color: #121827; background: #c7d0e5; }
+.nexdesk-admin-theme .nexdesk-content .btn-close { filter: invert(1); }
+.nexdesk-admin-theme .nexdesk-content .text-bg-primary { color: #c3dbff !important; background: #24549b !important; }
+.nexdesk-admin-theme .nexdesk-content .text-bg-info { color: #b5effb !important; background: #1e6275 !important; }
+.nexdesk-admin-theme .nexdesk-content .text-bg-warning { color: #ffe5a6 !important; background: #73591f !important; }
+.nexdesk-admin-theme .nexdesk-content .text-bg-success { color: #a6ecc8 !important; background: #246143 !important; }
+.nexdesk-admin-theme .nexdesk-content .text-bg-danger { color: #ffc1cb !important; background: #813a4b !important; }
+.nexdesk-admin-theme .nexdesk-content .text-bg-secondary { color: #d8dfed !important; background: #4b5871 !important; }
+
+.nexdesk-reports-page { display: flex; flex-direction: column; gap: 12px; max-width: 1250px; margin: 0 auto; }
+.nexdesk-reports-hero { position: relative; display: flex; min-height: 126px; align-items: center; justify-content: space-between; overflow: hidden; padding: 18px 24px; border: 1px solid rgba(111, 92, 255, .48); border-radius: 14px; background: radial-gradient(circle at 75% 45%, rgba(101, 45, 238, .44), transparent 28%), linear-gradient(108deg, #152b78, #28188b 54%, #1a125c); box-shadow: inset 0 1px rgba(255, 255, 255, .09), 0 10px 24px rgba(28, 17, 111, .2); }
+.nexdesk-reports-hero::before { position: absolute; top: -75px; right: 62px; width: 276px; height: 185px; content: ""; border: 1px solid rgba(141, 142, 255, .25); border-radius: 50%; transform: rotate(-16deg); }
+.nexdesk-reports-hero > div:first-child { position: relative; z-index: 1; }
+.nexdesk-reports-hero > div:first-child > span { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border: 1px solid rgba(222, 213, 255, .17); border-radius: 999px; color: #e7e2ff; background: rgba(207, 190, 255, .16); font-size: 9px; }
+.nexdesk-reports-hero h1 { margin: 6px 0 2px; color: #fff; font-size: 25px; font-weight: 750; letter-spacing: -.5px; }
+.nexdesk-reports-hero p { margin: 0; color: #d6d4fa; font-size: 10px; }
+.nexdesk-reports-hero-icon { position: relative; z-index: 1; display: grid; width: 83px; height: 83px; place-items: center; border: 1px solid rgba(167, 208, 255, .35); border-radius: 23px; color: #a3d8ff; background: linear-gradient(145deg, rgba(31, 170, 255, .4), rgba(103, 59, 247, .35)); box-shadow: 0 0 0 13px rgba(123, 69, 255, .1), 0 10px 24px rgba(6, 20, 94, .28); transform: rotate(-5deg); }
+.nexdesk-reports-hero-icon svg { transform: rotate(5deg); }
+
+.nexdesk-reports-info { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.nexdesk-reports-info > div { display: flex; min-width: 0; align-items: center; gap: 10px; padding: 11px; border: 1px solid #2b3858; border-radius: 11px; background: linear-gradient(145deg, #17233f, #111a30); }
+.nexdesk-reports-info > div > span { display: grid; width: 33px; height: 33px; flex: 0 0 33px; place-items: center; border-radius: 9px; color: #b48bff; background: rgba(139, 80, 255, .16); }
+.nexdesk-reports-info > div:nth-child(2) > span { color: #66ccff; background: rgba(39, 152, 249, .15); }
+.nexdesk-reports-info > div:nth-child(3) > span { color: #60e6a5; background: rgba(33, 201, 123, .13); }
+.nexdesk-reports-info p { display: flex; min-width: 0; flex-direction: column; margin: 0; }
+.nexdesk-reports-info strong { color: #eff2ff; font-size: 10px; font-weight: 600; }
+.nexdesk-reports-info small { margin-top: 2px; color: #9eacc8; font-size: 8px; line-height: 1.35; }
+.nexdesk-reports-content { padding: 16px; border: 1px solid #293653; border-radius: 13px; background: linear-gradient(145deg, #141d35, #10182d); }
+.nexdesk-reports-content .btn-outline-success { color: #71e6b0; border-color: #287f5d; }
+.nexdesk-reports-content .btn-outline-success:hover { color: #06150e; background: #71e6b0; }
+.nexdesk-reports-content .btn-outline-danger { color: #ff9bab; border-color: #934b5a; }
+.nexdesk-reports-content .btn-outline-danger:hover { color: #25070c; background: #ff9bab; }
+.nexdesk-reports-content .btn-outline-primary { color: #98c6ff; border-color: #3c6db4; }
+.nexdesk-reports-content .btn-outline-primary:hover { color: #06152c; background: #98c6ff; }
+
+@media (max-width: 700px) {
+  .nexdesk-reports-hero { min-height: 130px; padding: 16px; }
+  .nexdesk-reports-hero-icon { width: 60px; height: 60px; margin-right: 2px; border-radius: 18px; }
+  .nexdesk-reports-hero-icon svg { width: 32px; height: 32px; }
+  .nexdesk-reports-info { grid-template-columns: 1fr; }
+  .nexdesk-reports-content { padding: 12px; }
+}
+
+.nexdesk-admin-dashboard { display: flex; flex-direction: column; gap: 10px; max-width: 1600px; margin: 0 auto; }
+.nexdesk-welcome-panel {
+  position: relative;
+  display: flex;
+  min-height: 138px;
+  align-items: center;
+  overflow: hidden;
+  padding: 14px 21px;
+  border: 1px solid rgba(130, 103, 255, .42);
+  border-radius: 14px;
+  background: radial-gradient(ellipse at 69% 52%, rgba(114, 33, 232, .45), transparent 36%), linear-gradient(107deg, #261778 0%, #34128e 45%, #20116b 78%, #29118c 100%);
+  box-shadow: inset 0 1px rgba(255, 255, 255, .08), 0 10px 30px rgba(23, 12, 80, .2);
+}
+
+.nexdesk-welcome-panel::before,
+.nexdesk-welcome-panel::after { content: ""; position: absolute; border: 1px solid rgba(104, 116, 255, .14); border-radius: 50%; transform: rotate(-13deg); pointer-events: none; }
+.nexdesk-welcome-panel::before { width: 430px; height: 170px; right: 43px; top: -93px; }
+.nexdesk-welcome-panel::after { width: 355px; height: 120px; right: 65px; bottom: -88px; }
+.nexdesk-welcome-copy { position: relative; z-index: 1; width: 75%; }
+.nexdesk-role-pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 9px; border: 1px solid rgba(216, 200, 255, .16); border-radius: 999px; color: #f1eaff; background: rgba(179, 152, 255, .23); font-size: 9px; }
+.nexdesk-role-pill span { font-size: 11px; }
+.nexdesk-welcome-copy h1 { margin: 5px 0 2px; color: #fff; font-size: clamp(21px, 2.2vw, 28px); font-weight: 750; letter-spacing: -.65px; }
+.nexdesk-welcome-copy h1 span { font-size: .8em; }
+.nexdesk-welcome-copy p { margin: 0; color: #e0dafa; font-size: 10px; }
+.nexdesk-welcome-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 11px; }
+.nexdesk-welcome-links a { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border: 1px solid rgba(226, 221, 255, .1); border-radius: 8px; color: #f5f3ff; background: rgba(225, 220, 255, .13); font-size: 9px; text-decoration: none; transition: background .18s ease, transform .18s ease; }
+.nexdesk-welcome-links a:hover { color: #fff; background: rgba(228, 221, 255, .24); transform: translateY(-1px); }
+.nexdesk-welcome-links a span { font-size: 13px; }
+.nexdesk-hero-laptop { position: absolute; z-index: 1; top: -11px; right: 9px; width: 230px; height: 156px; overflow: visible; }
+.nexdesk-admin-error { padding: 8px 12px; border: 1px solid #814453; border-radius: 9px; color: #ffc6d0; background: #351b2b; font-size: 11px; }
+
+.nexdesk-stat-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.nexdesk-stat-card { position: relative; display: flex; min-width: 0; height: 79px; align-items: center; gap: 11px; overflow: hidden; padding: 10px 12px; border: 1px solid #2b3858; border-radius: 12px; color: #edf1ff; background: linear-gradient(145deg, #18223d, #111a30); box-shadow: inset 0 1px rgba(255, 255, 255, .035); text-decoration: none; transition: transform .18s ease, border-color .18s ease; }
+.nexdesk-stat-card:hover { color: #fff; transform: translateY(-2px); border-color: #59658c; }
+.nexdesk-stat-icon { display: grid; width: 38px; height: 38px; flex: 0 0 38px; place-items: center; border-radius: 11px; font-size: 20px; font-weight: 600; }
+.nexdesk-stat-card.purple .nexdesk-stat-icon { color: #bd86ff; background: rgba(132, 70, 255, .2); }
+.nexdesk-stat-card.amber .nexdesk-stat-icon { color: #f8b947; background: rgba(245, 166, 45, .15); }
+.nexdesk-stat-card.green .nexdesk-stat-icon { color: #56e3a1; background: rgba(33, 202, 128, .14); }
+.nexdesk-stat-card.red .nexdesk-stat-icon { color: #ff657c; background: rgba(239, 71, 101, .16); }
+.nexdesk-stat-text { display: flex; min-width: 0; flex-direction: column; }
+.nexdesk-stat-title { overflow: hidden; color: #c2cbe0; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+.nexdesk-stat-text strong { color: #f7f8ff; font-size: 20px; line-height: 1.15; }
+.nexdesk-stat-text small { margin-top: 3px; color: #a6b1ca; font-size: 8px; white-space: nowrap; }
+.nexdesk-stat-text small span { color: #9a6cff; }
+.nexdesk-stat-spark { position: absolute; right: 8px; bottom: 8px; width: 50px; height: 25px; overflow: visible; opacity: .95; }
+.nexdesk-stat-spark path { fill: none; stroke: #a86cff; stroke-width: 1.5; }
+.nexdesk-stat-card.amber .nexdesk-stat-spark path { stroke: #f5b638; }
+.nexdesk-stat-card.green .nexdesk-stat-spark path { stroke: #38db82; }
+.nexdesk-stat-card.red .nexdesk-stat-spark path { stroke: #f04b67; }
+
+.nexdesk-dashboard-charts { display: grid; grid-template-columns: minmax(0, .96fr) minmax(0, 1.04fr); gap: 10px; scroll-margin-top: 70px; }
+.nexdesk-panel { min-width: 0; border: 1px solid #283451; border-radius: 12px; color: #e6ebfa; background: linear-gradient(145deg, #141d35, #10182d); box-shadow: inset 0 1px rgba(255,255,255,.025); }
+.nexdesk-status-panel,
+.nexdesk-activity-panel { min-height: 144px; padding: 9px 12px 8px; }
+.nexdesk-panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 21px; }
+.nexdesk-panel-heading h2 { display: flex; align-items: center; gap: 7px; margin: 0; color: #f1f3ff; font-size: 11px; font-weight: 650; }
+.nexdesk-panel-heading h2 > span { color: #c18aff; font-size: 13px; }
+.nexdesk-panel-heading select { max-width: 115px; padding: 3px 7px; border: 1px solid #303c5a; border-radius: 7px; color: #cdd5e9; background: #19223a; font-size: 8px; outline: none; }
+.nexdesk-chart-actions { display: flex; align-items: center; gap: 5px; }
+.nexdesk-chart-actions button { display: grid; width: 23px; height: 23px; place-items: center; border: 1px solid #303c5a; border-radius: 7px; color: #c8d0e7; background: #19223a; font-size: 14px; line-height: 1; }
+.nexdesk-chart-actions button:hover:not(:disabled) { color: #fff; border-color: #8c69ff; }
+.nexdesk-chart-actions button:disabled { opacity: .5; cursor: wait; }
+.nexdesk-status-content { display: flex; align-items: center; justify-content: center; gap: clamp(14px, 3vw, 36px); min-height: 105px; }
+.nexdesk-donut { display: grid; width: 102px; height: 102px; flex: 0 0 102px; place-items: center; border-radius: 50%; }
+.nexdesk-donut > div { display: flex; width: 61px; height: 61px; align-items: center; justify-content: center; flex-direction: column; border: 1px solid #303d5e; border-radius: 50%; background: #111a30; box-shadow: 0 4px 13px rgba(0,0,0,.3); }
+.nexdesk-donut strong { color: #f7f8ff; font-size: 17px; line-height: 1.1; }
+.nexdesk-donut span { color: #c2cbe0; font-size: 8px; }
+.nexdesk-status-legend { display: flex; width: min(205px, 53%); flex-direction: column; gap: 5px; }
+.nexdesk-status-legend > div { display: grid; grid-template-columns: 8px minmax(50px, 1fr) 24px 29px; align-items: center; gap: 6px; color: #d4dcf0; font-size: 8px; }
+.nexdesk-status-legend strong { color: #eff2ff; font-size: 8px; font-weight: 500; text-align: right; }
+.nexdesk-status-legend small { color: #a4afca; font-size: 8px; text-align: right; }
+.nexdesk-legend-dot { width: 8px; height: 8px; border-radius: 3px; }
+.nexdesk-activity-chart { width: 100%; height: 108px; margin-top: 6px; }
+.nexdesk-activity-chart svg { display: block; width: 100%; height: 100%; overflow: visible; }
+
+.nexdesk-dashboard-bottom { display: grid; grid-template-columns: minmax(0, 2.1fr) minmax(235px, 1fr); gap: 10px; }
+.nexdesk-recent-panel,
+.nexdesk-quick-panel { min-height: 107px; padding: 8px 11px; }
+.nexdesk-panel-heading > a { color: #b784ff; font-size: 9px; text-decoration: none; white-space: nowrap; }
+.nexdesk-panel-heading > a:hover { color: #dcc5ff; }
+.nexdesk-table-wrap { width: 100%; overflow-x: auto; }
+.nexdesk-recent-table { width: 100%; margin-top: 6px; border-collapse: collapse; font-size: 8px; white-space: nowrap; }
+.nexdesk-recent-table th { padding: 4px 3px; border-bottom: 1px solid #2c3855; color: #aab5d0; font-weight: 500; text-align: left; }
+.nexdesk-recent-table td { max-width: 150px; padding: 5px 3px; border-bottom: 1px solid rgba(49, 61, 90, .62); color: #d5dcef; }
+.nexdesk-recent-table tr:last-child td { border-bottom: 0; }
+.nexdesk-ticket-id { display: inline-block; padding: 2px 5px; border: 1px solid rgba(150, 95, 255, .19); border-radius: 5px; color: #dec9ff; background: rgba(129, 76, 232, .2); font-size: 8px; }
+.nexdesk-recent-table .nexdesk-ticket-title { overflow: hidden; max-width: 180px; text-overflow: ellipsis; }
+.nexdesk-ticket-state { display: inline-block; padding: 2px 6px; border-radius: 5px; font-size: 8px; }
+.nexdesk-ticket-state.abierto { color: #a9d3ff; background: rgba(40, 122, 255, .25); }
+.nexdesk-ticket-state.asignado { color: #92eafa; background: rgba(10, 170, 207, .2); }
+.nexdesk-ticket-state.en_proceso { color: #ffe09d; background: rgba(245, 166, 45, .18); }
+.nexdesk-ticket-state.resuelto { color: #8aefbd; background: rgba(22, 174, 101, .2); }
+.nexdesk-ticket-state.cerrado { color: #d3d9e7; background: rgba(107, 120, 148, .25); }
+.nexdesk-ticket-state.reabierto { color: #ffc5cf; background: rgba(227, 71, 99, .2); }
+.nexdesk-assignee { display: inline-flex; align-items: center; gap: 5px; }
+.nexdesk-assignee > span { display: grid; width: 16px; height: 16px; place-items: center; border-radius: 50%; color: #d8e3ff; background: #2c3c60; font-size: 8px; }
+.nexdesk-recent-table td > a { color: #a9b4ce; text-decoration: none; letter-spacing: 1px; }
+.nexdesk-empty-row { height: 50px; color: #aab5d0 !important; text-align: center; }
+.nexdesk-quick-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; margin-top: 8px; }
+.nexdesk-quick-actions a,
+.nexdesk-quick-actions button { display: flex; min-width: 0; min-height: 51px; align-items: center; justify-content: center; flex-direction: column; gap: 3px; padding: 6px 4px; border: 1px solid #303d5f; border-radius: 9px; color: #e1e7f8; background: linear-gradient(145deg, #202a49, #151e38); font: inherit; font-size: 8px; text-align: center; text-decoration: none; transition: transform .16s ease, border-color .16s ease; }
+.nexdesk-quick-actions a:hover,
+.nexdesk-quick-actions button:hover:not(:disabled) { color: #fff; transform: translateY(-1px); border-color: #7d66db; }
+.nexdesk-quick-actions a > span,
+.nexdesk-quick-actions button > span { color: #d0beff; font-size: 17px; line-height: 1; }
+.nexdesk-quick-actions .primary { border-color: #8955ff; color: #fff; background: linear-gradient(140deg, #9148f8, #4136d7); box-shadow: 0 5px 14px rgba(109, 64, 231, .25); }
+.nexdesk-quick-actions .primary > span { color: #fff; }
+.nexdesk-quick-actions button:disabled { opacity: .45; cursor: not-allowed; }
+
+/* Dashboard administrativo: ocupa el área de trabajo completa */
+.nexdesk-admin-dashboard { min-height: calc(100dvh - 75px); }
+.nexdesk-dashboard-charts,
+.nexdesk-dashboard-bottom { min-height: 220px; flex: 1 1 220px; }
+.nexdesk-dashboard-charts > .nexdesk-panel,
+.nexdesk-dashboard-bottom > .nexdesk-panel { display: flex; min-height: 0; height: 100%; flex-direction: column; }
+.nexdesk-status-panel,
+.nexdesk-activity-panel { padding: 13px 15px; border-radius: 14px; }
+.nexdesk-status-content { flex: 1; min-height: 0; }
+.nexdesk-activity-panel .nexdesk-activity-chart { height: auto; min-height: 145px; flex: 1; margin-top: 10px; }
+.nexdesk-activity-panel .nexdesk-activity-chart svg { width: 100%; height: 100%; }
+.nexdesk-admin-activity-caption { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-top: 9px; border-top: 1px solid rgba(56, 69, 104, .7); color: #aebbd4; font-size: 9px; }
+.nexdesk-admin-activity-caption span { display: inline-flex; align-items: center; gap: 5px; }
+.nexdesk-admin-activity-caption i { width: 6px; height: 6px; border-radius: 50%; background: #b274ff; box-shadow: 0 0 0 3px rgba(178, 116, 255, .14); }
+.nexdesk-admin-activity-caption small { color: #8895b4; font-size: 8px; text-align: right; }
+.nexdesk-recent-panel,
+.nexdesk-quick-panel { min-height: 0; padding: 13px 14px; border-radius: 14px; }
+.nexdesk-table-wrap { flex: 1; }
+.nexdesk-recent-table { margin-top: 10px; font-size: 10px; }
+.nexdesk-recent-table th { padding: 8px 5px; font-weight: 600; }
+.nexdesk-recent-table td { padding: 10px 5px; }
+.nexdesk-admin-empty-state { display: flex; width: min(330px, 100%); flex: 1; align-self: center; align-items: center; justify-content: center; flex-direction: column; padding: 18px 12px; text-align: center; }
+.nexdesk-admin-empty-state > span { display: grid; width: 54px; height: 54px; place-items: center; border: 1px solid rgba(183, 130, 255, .34); border-radius: 17px; color: #ce9dff; background: radial-gradient(circle at 30% 25%, rgba(151, 72, 255, .31), rgba(61, 35, 144, .18)); font-size: 25px; box-shadow: 0 10px 24px rgba(91, 42, 186, .15); }
+.nexdesk-admin-empty-state h3 { margin: 13px 0 5px; color: #f1edff; font-size: 14px; font-weight: 650; }
+.nexdesk-admin-empty-state p { max-width: 285px; margin: 0; color: #aeb9d3; font-size: 10px; line-height: 1.55; }
+.nexdesk-admin-empty-state a { margin-top: 13px; padding: 7px 11px; border: 1px solid #7652ca; border-radius: 8px; color: #ede5ff; background: rgba(116, 77, 212, .2); font-size: 10px; text-decoration: none; }
+.nexdesk-admin-empty-state a:hover { color: #fff; border-color: #a98cff; background: rgba(139, 94, 236, .3); }
+.nexdesk-quick-actions { margin-top: 11px; }
+.nexdesk-quick-actions a,
+.nexdesk-quick-actions button { min-height: 59px; font-size: 9px; }
+.nexdesk-admin-actions-status { display: flex; align-items: flex-start; gap: 9px; margin-top: auto; padding: 11px 10px; border: 1px solid rgba(67, 178, 128, .31); border-radius: 10px; color: #d8f9e7; background: linear-gradient(135deg, rgba(20, 107, 76, .26), rgba(28, 60, 100, .25)); }
+.nexdesk-admin-actions-status.has-pending { border-color: rgba(177, 117, 255, .34); color: #ebddff; background: linear-gradient(135deg, rgba(100, 44, 166, .27), rgba(38, 55, 114, .27)); }
+.nexdesk-admin-actions-status > span { display: grid; width: 28px; height: 28px; flex: 0 0 28px; place-items: center; border-radius: 8px; color: #6fe7aa; background: rgba(47, 190, 119, .14); font-size: 15px; }
+.nexdesk-admin-actions-status.has-pending > span { color: #d39dff; background: rgba(167, 82, 255, .15); }
+.nexdesk-admin-actions-status small { display: block; color: #a8d2bb; font-size: 8px; }
+.nexdesk-admin-actions-status.has-pending small { color: #cbb4e8; }
+.nexdesk-admin-actions-status strong { display: block; margin-top: 2px; color: inherit; font-size: 10px; font-weight: 650; }
+.nexdesk-admin-actions-status p { margin: 4px 0 0; color: #a3bfbe; font-size: 8px; line-height: 1.35; }
+.nexdesk-admin-actions-status.has-pending p { color: #bbafd0; }
+
+@media (max-width: 1100px) {
+  .nexdesk-admin-topbar .nexdesk-topbar-left { flex-basis: 29%; min-width: 185px; }
+  .nexdesk-global-search { max-width: 300px; }
+  .nexdesk-global-search kbd { display: none; }
+  .nexdesk-dashboard-bottom { grid-template-columns: minmax(0, 1.7fr) minmax(220px, 1fr); }
+}
+
+@media (max-width: 991px) {
+  .nexdesk-admin-dashboard { min-height: 0; }
+  .nexdesk-dashboard-charts,
+  .nexdesk-dashboard-bottom { min-height: 0; flex: none; }
+  .nexdesk-admin-theme .nexdesk-sidebar { width: 230px; }
+  .nexdesk-admin-theme .nexdesk-main { margin-left: 0; }
+  .nexdesk-admin-theme .nexdesk-admin-topbar { min-height: 59px; }
+  .nexdesk-admin-theme .nexdesk-content { padding: 12px; }
+  .nexdesk-admin-theme .nexdesk-menu-toggle { display: inline-flex; }
+  .nexdesk-admin-topbar .nexdesk-topbar-left { flex: 0 0 auto; min-width: 0; }
+  .nexdesk-admin-topbar .nexdesk-topbar-title small { display: none; }
+  .nexdesk-global-search { max-width: none; }
+}
+
+@media (max-width: 700px) {
+  .nexdesk-admin-topbar { flex-wrap: wrap; }
+  .nexdesk-admin-topbar .nexdesk-topbar-left { flex: 1; }
+  .nexdesk-global-search { order: 3; flex: 1 0 100%; max-width: none; }
+  .nexdesk-admin-topbar .nexdesk-topbar-right { margin-left: auto; }
+  .nexdesk-admin-theme .nexdesk-admin-topbar { padding: 7px 10px; }
+  .nexdesk-welcome-panel { min-height: 150px; padding: 13px 14px; }
+  .nexdesk-welcome-copy { width: 100%; padding-right: 60px; }
+  .nexdesk-welcome-copy p { max-width: 420px; }
+  .nexdesk-welcome-links { gap: 5px; }
+  .nexdesk-welcome-links a { padding: 5px 7px; font-size: 8px; }
+  .nexdesk-hero-laptop { right: -57px; top: 1px; width: 200px; opacity: .45; }
+  .nexdesk-stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .nexdesk-dashboard-charts { grid-template-columns: 1fr; }
+  .nexdesk-dashboard-bottom { grid-template-columns: 1fr; }
+  .nexdesk-status-content { justify-content: space-evenly; }
+}
+
+@media (max-width: 420px) {
+  .nexdesk-admin-theme .nexdesk-user-info { display: none; }
+  .nexdesk-admin-theme .nexdesk-topbar-right { gap: 6px; }
+  .nexdesk-welcome-copy { padding-right: 0; }
+  .nexdesk-hero-laptop { right: -83px; opacity: .27; }
+  .nexdesk-welcome-links a { font-size: 0; gap: 0; }
+  .nexdesk-welcome-links a span { font-size: 15px; }
+  .nexdesk-stat-card { gap: 7px; padding: 8px; }
+  .nexdesk-stat-icon { width: 33px; height: 33px; flex-basis: 33px; }
+  .nexdesk-stat-spark { width: 36px; opacity: .6; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nexdesk-admin-theme *,
+  .nexdesk-admin-theme *::before,
+  .nexdesk-admin-theme *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+}
+
+/* Inicio de sesión VORTIX */
+.nexdesk-login-page {
+  position: relative;
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  overflow: hidden;
+  padding: 28px;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 21% 24%, rgba(20, 112, 255, .2), transparent 26%),
+    radial-gradient(circle at 74% 67%, rgba(63, 37, 255, .24), transparent 32%),
+    linear-gradient(135deg, #050c27 0%, #070e2b 52%, #0d0c47 100%);
+}
+
+.nexdesk-login-page::before,
+.nexdesk-login-page::after {
+  position: absolute;
+  z-index: -2;
+  content: "";
+  width: 1020px;
+  height: 420px;
+  border: 2px solid rgba(48, 103, 255, .8);
+  border-radius: 50%;
+  filter: drop-shadow(0 0 10px rgba(51, 124, 255, .75));
+  pointer-events: none;
+}
+
+.nexdesk-login-page::before {
+  top: -250px;
+  left: -140px;
+  transform: rotate(-27deg);
+}
+
+.nexdesk-login-page::after {
+  right: -360px;
+  bottom: -275px;
+  border-color: rgba(77, 79, 255, .73);
+  transform: rotate(22deg);
+}
+
+.nexdesk-login-orbit {
+  position: absolute;
+  z-index: -1;
+  width: 840px;
+  height: 280px;
+  border: 2px solid rgba(68, 72, 255, .82);
+  border-radius: 50%;
+  opacity: .82;
+  filter: drop-shadow(0 0 9px rgba(89, 58, 255, .7));
+  pointer-events: none;
+}
+
+.nexdesk-login-orbit-one { top: 7%; right: 47%; transform: rotate(-30deg); }
+.nexdesk-login-orbit-two { bottom: 4%; left: 60%; transform: rotate(-28deg); }
+
+.nexdesk-login-shell {
+  display: grid;
+  grid-template-columns: minmax(260px, .9fr) minmax(300px, 1.1fr);
+  width: min(100%, 755px);
+  min-height: 525px;
+  overflow: hidden;
+  border: 1px solid rgba(115, 136, 255, .58);
+  border-radius: 24px;
+  background: rgba(8, 16, 47, .82);
+  box-shadow: 0 24px 58px rgba(0, 0, 19, .5), inset 0 1px rgba(255, 255, 255, .08);
+  backdrop-filter: blur(16px);
+}
+
+.nexdesk-login-showcase {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 48px 38px 32px;
+  background:
+    radial-gradient(ellipse at 41% 39%, rgba(39, 107, 255, .35), transparent 40%),
+    linear-gradient(150deg, rgba(18, 62, 168, .96), rgba(19, 35, 102, .98) 52%, rgba(23, 14, 93, .98));
+}
+
+.nexdesk-login-showcase::before {
+  position: absolute;
+  top: -76px;
+  right: -85px;
+  content: "";
+  width: 265px;
+  height: 430px;
+  border-radius: 46%;
+  background: linear-gradient(170deg, rgba(3, 13, 57, .86), rgba(28, 19, 120, .08));
+  transform: rotate(15deg);
+}
+
+.nexdesk-login-showcase::after {
+  position: absolute;
+  top: 140px;
+  right: -135px;
+  content: "";
+  width: 300px;
+  height: 300px;
+  border: 1px solid rgba(91, 116, 255, .25);
+  border-radius: 50%;
+}
+
+.nexdesk-login-showcase-brand,
+.nexdesk-login-artwork,
+.nexdesk-login-features { position: relative; z-index: 1; }
+
+.nexdesk-login-showcase-brand strong {
+  display: block;
+  color: #f5f8ff;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -.6px;
+}
+
+.nexdesk-login-showcase-brand span {
+  display: block;
+  margin-top: 3px;
+  color: #c2d2f5;
+  font-size: 12px;
+  line-height: 1.26;
+}
+
+.nexdesk-login-artwork {
+  width: 115%;
+  max-width: 400px;
+  height: auto;
+  margin: 7px -9% -9px -11%;
+  filter: drop-shadow(0 12px 18px rgba(1, 6, 52, .28));
+}
+
+.nexdesk-login-features {
+  display: grid;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.nexdesk-login-features > div { display: flex; align-items: center; gap: 11px; }
+
+.nexdesk-login-features > div > span {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  place-items: center;
+  border: 1px solid rgba(132, 192, 255, .12);
+  border-radius: 9px;
+  color: #80bdff;
+  background: rgba(25, 92, 195, .36);
+}
+
+.nexdesk-login-features p { display: flex; flex-direction: column; margin: 0; }
+.nexdesk-login-features strong { color: #f1f6ff; font-size: 10px; font-weight: 650; }
+.nexdesk-login-features small { margin-top: 2px; color: #abc2eb; font-size: 8px; }
+
+.nexdesk-login-form-side {
+  display: grid;
+  place-items: center;
+  padding: 29px 43px 24px;
+  background:
+    radial-gradient(circle at 91% 4%, rgba(88, 50, 255, .2), transparent 30%),
+    linear-gradient(155deg, rgba(7, 21, 57, .94), rgba(6, 15, 42, .98));
+}
+
+.nexdesk-login-form-content { width: min(100%, 305px); text-align: center; }
+
+.nexdesk-login-brand-mark {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 10px;
+  place-items: center;
+  border: 1px solid rgba(137, 214, 255, .45);
+  border-radius: 12px;
+  color: #fff;
+  background: linear-gradient(145deg, #35bfff, #3869f7 60%, #563cf0);
+  box-shadow: 0 0 0 4px rgba(50, 149, 255, .08), 0 8px 22px rgba(29, 107, 255, .42);
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.nexdesk-login-form-content h1 {
+  margin: 0;
+  color: #f6f8ff;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: .2px;
+}
+
+.nexdesk-login-form-content h1 span { color: #1489ff; }
+.nexdesk-login-subtitle { margin: 2px 0 20px; color: #94a6c9; font-size: 10px; }
+.nexdesk-login-form-content h2 { margin: 0; color: #f0f3fc; font-size: 15px; font-weight: 650; }
+.nexdesk-login-instruction { margin: 3px 0 19px; color: #9baaca; font-size: 10px; }
+
+.nexdesk-login-error {
+  margin: -5px 0 12px;
+  padding: 7px 9px;
+  border: 1px solid rgba(255, 105, 135, .45);
+  border-radius: 8px;
+  color: #ffd2db;
+  background: rgba(151, 27, 61, .28);
+  font-size: 9px;
+  text-align: left;
+}
+
+.nexdesk-login-form { display: grid; gap: 7px; text-align: left; }
+.nexdesk-login-form label { display: flex; align-items: center; gap: 6px; margin: 0; color: #d8e1f4; font-size: 10px; font-weight: 600; }
+.nexdesk-login-form label svg { color: #c4d5f5; }
+
+.nexdesk-login-input {
+  display: flex;
+  height: 38px;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid #253b67;
+  border-radius: 8px;
+  background: #111e3c;
+  box-shadow: inset 0 1px 3px rgba(1, 5, 22, .27);
+  transition: border-color .18s ease, box-shadow .18s ease;
+}
+
+.nexdesk-login-input:focus-within { border-color: #428bff; box-shadow: 0 0 0 3px rgba(45, 116, 255, .15), inset 0 1px 3px rgba(1, 5, 22, .27); }
+.nexdesk-login-input input { width: 100%; height: 100%; min-width: 0; padding: 0 12px; border: 0; outline: 0; color: #edf4ff; background: transparent; font: inherit; font-size: 10px; }
+.nexdesk-login-input input::placeholder { color: #7183a9; opacity: 1; }
+.nexdesk-login-input button { display: grid; width: 34px; height: 100%; flex: 0 0 34px; place-items: center; border: 0; color: #9fb1d4; background: transparent; }
+.nexdesk-login-input button:hover { color: #e6efff; }
+
+.nexdesk-login-submit {
+  display: flex;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 5px;
+  border: 1px solid rgba(139, 205, 255, .28);
+  border-radius: 8px;
+  color: #fff;
+  background: linear-gradient(100deg, #1bb7ed, #2873f7 48%, #482bff);
+  box-shadow: 0 8px 18px rgba(40, 78, 255, .26), inset 0 1px rgba(255, 255, 255, .21);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 650;
+  transition: transform .18s ease, filter .18s ease;
+}
+
+.nexdesk-login-submit:hover:not(:disabled) { filter: brightness(1.1); transform: translateY(-1px); }
+.nexdesk-login-submit:disabled { cursor: wait; filter: saturate(.65); opacity: .78; }
+
+.nexdesk-login-backend { margin-top: 17px; text-align: left; }
+.nexdesk-login-backend-status { display: flex; align-items: center; gap: 7px; }
+.nexdesk-login-backend-dot { width: 9px; height: 9px; flex: 0 0 9px; border-radius: 50%; background: #687893; }
+.nexdesk-login-backend-dot.conectada { background: #2bd879; box-shadow: 0 0 9px rgba(43, 216, 121, .48); }
+.nexdesk-login-backend-dot.error { background: #ff5874; box-shadow: 0 0 9px rgba(255, 88, 116, .4); }
+.nexdesk-login-backend-status > div { display: flex; min-width: 0; flex: 1; flex-direction: column; }
+.nexdesk-login-backend-status strong { color: #dbe4f5; font-size: 9px; font-weight: 550; }
+.nexdesk-login-backend-status small { margin-top: 1px; color: #8495b6; font-size: 8px; }
+.nexdesk-login-backend-badge { padding: 5px 7px; border-radius: 7px; color: #bcc8df; background: #202c47; font-size: 8px; }
+.nexdesk-login-backend-badge.conectada { color: #72e9ab; background: rgba(19, 145, 89, .33); }
+.nexdesk-login-backend-badge.error { color: #ffb0bd; background: rgba(186, 43, 70, .28); }
+.nexdesk-login-backend-error { margin: 7px 0 0; color: #ffb5c1; font-size: 8px; }
+.nexdesk-login-backend button { display: inline-flex; align-items: center; gap: 5px; margin-top: 7px; padding: 0; border: 0; color: #4fa9ff; background: transparent; font: inherit; font-size: 8px; }
+.nexdesk-login-backend button:hover:not(:disabled) { color: #a7d5ff; text-decoration: underline; }
+.nexdesk-login-backend button:disabled { opacity: .6; cursor: wait; }
+
+.nexdesk-login-security { display: flex; align-items: center; justify-content: center; gap: 5px; margin: 12px 0 0; padding-top: 12px; border-top: 1px solid #233452; color: #a8b8d5; font-size: 8px; }
+.nexdesk-login-security svg { color: #b6caec; }
+
+@media (max-width: 680px) {
+  .nexdesk-login-page { padding: 18px; }
+  .nexdesk-login-shell { display: block; width: min(100%, 395px); min-height: 0; }
+  .nexdesk-login-showcase { display: none; }
+  .nexdesk-login-form-side { min-height: 540px; padding: 30px 26px 24px; }
+  .nexdesk-login-form-content { width: min(100%, 300px); }
+}
+
+@media (max-width: 390px) {
+  .nexdesk-login-page { padding: 10px; }
+  .nexdesk-login-form-side { min-height: 100vh; padding: 25px 22px; }
+  .nexdesk-login-shell { border-radius: 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nexdesk-login-page *,
+  .nexdesk-login-page *::before,
+  .nexdesk-login-page *::after { transition: none !important; }
+}
+
+/* Espacio de trabajo para técnicos y usuarios */
+.nexdesk-workspace-theme {
+  --workspace-bg: #071126;
+  --workspace-panel: #101d3c;
+  --workspace-border: #263b68;
+  --workspace-text: #edf4ff;
+  --workspace-muted: #9bafd2;
+  min-height: 100vh;
+  color: var(--workspace-text);
+  background:
+    radial-gradient(circle at 72% 2%, rgba(32, 77, 204, .18), transparent 31%),
+    linear-gradient(140deg, #071126, #0a1231 65%, #071128);
+}
+
+.nexdesk-workspace-theme .nexdesk-sidebar {
+  width: 178px;
+  background: linear-gradient(180deg, #0a1937, #071329 88%);
+  border-right: 1px solid #1c3158;
+  box-shadow: 8px 0 28px rgba(0, 5, 27, .24);
+}
+
+.nexdesk-workspace-theme .nexdesk-sidebar-brand {
+  min-height: 55px;
+  padding: 10px 14px;
+  gap: 9px;
+  color: #fff;
+  text-decoration: none;
+  border-bottom-color: #1e3154;
+}
+
+.nexdesk-workspace-theme .nexdesk-brand-icon {
+  width: 29px;
+  height: 29px;
+  flex: 0 0 29px;
+  border-radius: 8px;
+  background: linear-gradient(145deg, #269dff, #1f51ed);
+  box-shadow: 0 5px 14px rgba(24, 100, 255, .42);
+  font-size: 18px;
+}
+
+.nexdesk-workspace-theme .nexdesk-brand-copy strong { color: #f5f8ff; font-size: 13px; letter-spacing: .2px; }
+.nexdesk-workspace-theme .nexdesk-brand-copy small { margin-top: 1px; color: #9fb5da; font-size: 8px; white-space: nowrap; }
+.nexdesk-workspace-theme .nexdesk-sidebar-nav { padding: 0 10px; }
+.nexdesk-workspace-theme .nexdesk-sidebar-label { padding: 19px 4px 8px; color: #8498bb; font-size: 8px; font-weight: 650; letter-spacing: .1px; text-transform: uppercase; }
+.nexdesk-workspace-theme .nexdesk-sidebar-label-separated { margin-top: 10px; padding-top: 13px; border-top-color: #1e3358; }
+
+.nexdesk-workspace-theme .nexdesk-nav-link {
+  position: relative;
+  min-height: 31px;
+  gap: 10px;
+  padding: 7px 9px;
+  margin-bottom: 3px;
+  border: 0;
+  border-radius: 8px;
+  color: #bdc9e1;
+  background: transparent;
+  font: inherit;
+  font-size: 9px;
+  text-align: left;
+}
+
+.nexdesk-workspace-theme .nexdesk-nav-link svg { color: #aabbd8; }
+.nexdesk-workspace-theme .nexdesk-nav-link:hover { color: #fff; background: rgba(62, 124, 255, .12); }
+.nexdesk-workspace-theme .nexdesk-nav-link.activo { color: #fff; background: linear-gradient(100deg, #168ffa, #3157fe); box-shadow: 0 6px 15px rgba(31, 92, 255, .31), inset 0 1px rgba(255, 255, 255, .15); }
+.nexdesk-workspace-theme .nexdesk-nav-link.activo svg { color: #fff; }
+.nexdesk-workspace-nav { display: flex; min-height: 0; flex: 1; flex-direction: column; overflow-y: auto; }
+.nexdesk-workspace-nav .nexdesk-sidebar-label-separated { margin-top: auto; }
+.nexdesk-workspace-nav .nexdesk-workspace-logout { width: 100%; color: #c7d2e8; cursor: pointer; }
+.nexdesk-workspace-nav .nexdesk-workspace-logout:hover { color: #fff; }
+.nexdesk-workspace-nav .nexdesk-workspace-logout:focus-visible { outline: 2px solid #54a8ff; outline-offset: 2px; }
+.nexdesk-workspace-nav-count { margin-left: auto; padding: 1px 5px; border-radius: 5px; color: #dce8ff; background: rgba(98, 109, 255, .45); font-size: 8px; }
+.nexdesk-workspace-theme .nexdesk-main { margin-left: 178px; }
+
+.nexdesk-workspace-theme .nexdesk-workspace-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+  min-height: 55px;
+  padding: 7px 14px;
+  gap: 12px;
+  color: #edf4ff;
+  background: rgba(10, 23, 52, .96);
+  border-bottom: 1px solid #1e3157;
+  backdrop-filter: blur(14px);
+}
+
+.nexdesk-workspace-topbar .nexdesk-topbar-left { display: flex; flex: 0 0 38%; align-items: center; min-width: 220px; gap: 10px; }
+.nexdesk-workspace-topbar .nexdesk-topbar-title strong { color: #f3f7ff; font-size: 13px; font-weight: 650; }
+.nexdesk-workspace-topbar .nexdesk-topbar-title small { color: #9eb2d6; font-size: 9px; }
+.nexdesk-workspace-topbar .nexdesk-topbar-right { display: flex; align-items: center; gap: 8px; }
+.nexdesk-workspace-theme .nexdesk-global-search { max-width: 290px; height: 29px; border-color: #2a4271; background: #122242; }
+.nexdesk-workspace-theme .nexdesk-global-search kbd { border-color: #2f4d7f; background: #1b315a; }
+.nexdesk-workspace-theme .nexdesk-menu-toggle { color: #eff5ff; background: #14264a; border-color: #31507f; }
+
+.nexdesk-workspace-theme .nexdesk-icon-button,
+.nexdesk-workspace-theme .nexdesk-user-menu { color: #dce8fb; background: transparent; }
+.nexdesk-workspace-theme .nexdesk-icon-button { display: grid; width: 33px; height: 33px; place-items: center; padding: 0; border: 1px solid #2d4776; border-radius: 9px; background: #102142; }
+.nexdesk-workspace-theme .nexdesk-icon-button:hover,
+.nexdesk-workspace-theme .nexdesk-user-menu:hover { color: #fff; border-color: #5275b9; background: #172d54; }
+.nexdesk-workspace-theme .nexdesk-user-menu { display: flex; min-height: 37px; align-items: center; gap: 8px; padding: 3px 5px; border: 1px solid transparent; border-radius: 9px; }
+.nexdesk-workspace-theme .nexdesk-avatar { width: 30px; height: 30px; flex: 0 0 30px; color: #fff; background: linear-gradient(145deg, #23b0f5, #2960ef); font-size: 12px; box-shadow: 0 0 0 3px rgba(56, 126, 255, .11); }
+.nexdesk-workspace-theme .nexdesk-user-info { display: flex; min-width: max-content; flex-direction: column; gap: 1px; line-height: 1.15; white-space: nowrap; }
+.nexdesk-workspace-theme .nexdesk-user-info strong { color: #f0f5ff; font-size: 9px; font-weight: 600; }
+.nexdesk-workspace-theme .nexdesk-user-info small { color: #a4b6d7; font-size: 8px; }
+.nexdesk-workspace-theme .nexdesk-user-chevron { color: #abbddb; font-size: 13px; }
+.nexdesk-workspace-theme .dropdown-menu { background: #102142; border: 1px solid #2c4775 !important; }
+.nexdesk-workspace-theme .dropdown-item,
+.nexdesk-workspace-theme .dropdown-item-text { color: #dce6f8; }
+.nexdesk-workspace-theme .dropdown-item:hover { color: #fff; background: #1b345f; }
+.nexdesk-workspace-theme .dropdown-divider { border-color: #2b4775; }
+
+.nexdesk-workspace-theme .nexdesk-content { padding: 10px 13px 16px; }
+.nexdesk-workspace-theme .nexdesk-content .card,
+.nexdesk-workspace-theme .nexdesk-content .modal-content { color: #e5eefe; background: #10203f; border: 1px solid #2a4472 !important; }
+.nexdesk-workspace-theme .nexdesk-content .card-header,
+.nexdesk-workspace-theme .nexdesk-content .card-footer,
+.nexdesk-workspace-theme .nexdesk-content .modal-header,
+.nexdesk-workspace-theme .nexdesk-content .modal-footer { border-color: #2b4775; }
+.nexdesk-workspace-theme .nexdesk-content .table { --bs-table-color: #dce7fa; --bs-table-bg: transparent; --bs-table-border-color: #29436e; --bs-table-striped-bg: rgba(255, 255, 255, .025); --bs-table-hover-bg: rgba(49, 107, 255, .1); color: #dce7fa; }
+.nexdesk-workspace-theme .nexdesk-content .text-secondary { color: #9bb0d2 !important; }
+.nexdesk-workspace-theme .nexdesk-content .text-dark { color: #f0f5ff !important; }
+.nexdesk-workspace-theme .nexdesk-content .form-control,
+.nexdesk-workspace-theme .nexdesk-content .form-select { color: #e8f1ff; background: #0b1834; border-color: #2e4a79; }
+.nexdesk-workspace-theme .nexdesk-content .form-control::placeholder { color: #8499be; }
+.nexdesk-workspace-theme .nexdesk-content .form-control:focus,
+.nexdesk-workspace-theme .nexdesk-content .form-select:focus { border-color: #4c96ff; box-shadow: 0 0 0 .2rem rgba(76, 150, 255, .14); }
+.nexdesk-workspace-theme .nexdesk-content .form-label { color: #d9e6fa; }
+.nexdesk-workspace-theme .nexdesk-content .btn-close { filter: invert(1); }
+.nexdesk-workspace-theme .nexdesk-content .alert-light { color: #dce8fa; background: #122343; border-color: #2c4775; }
+.nexdesk-workspace-theme .nexdesk-content .modal-backdrop { background: #020714; }
+.nexdesk-workspace-theme .nexdesk-content .list-group { border: 1px solid #2b4775; border-radius: 10px; overflow: hidden; }
+.nexdesk-workspace-theme .nexdesk-content .list-group-item { color: #dde8fb; background: #102141; border-color: #2a4674; }
+.nexdesk-workspace-theme .nexdesk-content .list-group-item-action:hover { color: #fff; background: #193259; }
+.nexdesk-workspace-theme .nexdesk-content .list-group-item.active { color: #fff; border-color: #438aff; background: linear-gradient(102deg, #167fdf, #3159e8); }
+.nexdesk-workspace-theme .nexdesk-content .list-group-item.active .text-secondary { color: #d8e8ff !important; }
+.nexdesk-workspace-theme .nexdesk-content .bg-body-tertiary { color: #e1ecff !important; background: #13294c !important; }
+.nexdesk-workspace-theme .nexdesk-content .alert-success { color: #b5efd1; border-color: #347e5d; background: #153f31; }
+.nexdesk-workspace-theme .nexdesk-content .alert-danger { color: #ffc4ce; border-color: #894b5b; background: #3a202d; }
+.nexdesk-workspace-theme .nexdesk-content .alert-info { color: #b7e7ff; border-color: #3b7199; background: #153a56; }
+.nexdesk-workspace-theme .nexdesk-content .btn-primary { border-color: #408eff; background: linear-gradient(102deg, #159ce3, #315bea); }
+.nexdesk-workspace-theme .nexdesk-content .btn-outline-primary { color: #abd2ff; border-color: #4677bd; }
+.nexdesk-workspace-theme .nexdesk-content .btn-outline-primary:hover { color: #07182f; background: #abd2ff; }
+.nexdesk-workspace-theme .nexdesk-content .btn-outline-success { color: #91eabe; border-color: #3a9067; }
+.nexdesk-workspace-theme .nexdesk-content .btn-outline-success:hover { color: #062116; background: #91eabe; }
+.nexdesk-workspace-theme .nexdesk-content .btn-outline-secondary { color: #c8d6ed; border-color: #58739e; }
+.nexdesk-workspace-theme .nexdesk-content .btn-outline-secondary:hover { color: #0b1a33; background: #c8d6ed; }
+.nexdesk-workspace-theme .nexdesk-content .text-bg-primary { color: #c0e0ff !important; background: #215ea6 !important; }
+.nexdesk-workspace-theme .nexdesk-content .text-bg-info { color: #baefff !important; background: #1e6679 !important; }
+.nexdesk-workspace-theme .nexdesk-content .text-bg-warning { color: #ffe7a9 !important; background: #755b20 !important; }
+.nexdesk-workspace-theme .nexdesk-content .text-bg-success { color: #a5efca !important; background: #236644 !important; }
+.nexdesk-workspace-theme .nexdesk-content .text-bg-danger { color: #ffc4ce !important; background: #823d4d !important; }
+.nexdesk-workspace-theme .nexdesk-content .text-bg-secondary { color: #dce6f5 !important; background: #4b5f80 !important; }
+
+/* Directorio de tickets */
+:is(.nexdesk-admin-theme, .nexdesk-workspace-theme) .nexdesk-tickets-page { max-width: 1500px; }
+:is(.nexdesk-admin-theme, .nexdesk-workspace-theme) .nexdesk-tickets-heading h1 { color: #f1f5ff; letter-spacing: -.35px; }
+:is(.nexdesk-admin-theme, .nexdesk-workspace-theme) .nexdesk-ticket-summary-card { position: relative; overflow: hidden; border: 1px solid #2c4777 !important; border-radius: 12px; background: linear-gradient(145deg, #152b50, #0f1d39) !important; box-shadow: inset 0 1px rgba(255, 255, 255, .04) !important; }
+:is(.nexdesk-admin-theme, .nexdesk-workspace-theme) .nexdesk-ticket-summary-card::after { position: absolute; right: -21px; bottom: -27px; width: 84px; height: 84px; content: ""; border: 1px solid rgba(108, 153, 255, .18); border-radius: 50%; }
+:is(.nexdesk-admin-theme, .nexdesk-workspace-theme) .nexdesk-ticket-summary-card .card-body { display: flex; align-items: center; gap: 11px; min-height: 77px; padding: 13px; }
+.nexdesk-ticket-summary-icon { position: relative; z-index: 1; display: grid; width: 36px; height: 36px; flex: 0 0 36px; place-items: center; border-radius: 10px; color: #70caff; background: rgba(32, 151, 247, .18); }
+.nexdesk-ticket-summary-card.purple .nexdesk-ticket-summary-icon { color: #cb94ff; background: rgba(144, 68, 255, .18); }
+.nexdesk-ticket-summary-card.amber .nexdesk-ticket-summary-icon { color: #ffd37d; background: rgba(226, 154, 25, .18); }
+.nexdesk-ticket-summary-card.green .nexdesk-ticket-summary-icon { color: #69e9ad; background: rgba(27, 195, 115, .16); }
+:is(.nexdesk-admin-theme, .nexdesk-workspace-theme) .nexdesk-ticket-summary-card .h3 { color: #f6f9ff; font-size: 23px; }
+
+:is(.nexdesk-admin-theme, .nexdesk-workspace-theme) .nexdesk-tickets-directory { border: 1px solid #2b4775 !important; background: linear-gradient(145deg, #122745, #0d1b36) !important; }
+.nexdesk-tickets-directory-title { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 15px; }
+.nexdesk-tickets-directory-title > div { display: flex; align-items: center; gap: 8px; }
+.nexdesk-tickets-directory-title > div > span { display: grid; width: 28px; height: 28px; place-items: center; border-radius: 8px; color: #77caff; background: rgba(31, 145, 244, .17); }
+.nexdesk-tickets-directory-title h2 { margin: 0; color: #eef5ff; font-size: 13px; font-weight: 650; }
+.nexdesk-tickets-directory-title > small { padding-top: 6px; color: #98add0; font-size: 9px; text-align: right; }
+:is(.nexdesk-admin-theme, .nexdesk-workspace-theme) .nexdesk-tickets-directory .table-responsive { border: 1px solid #2b4775; border-radius: 10px; }
+:is(.nexdesk-admin-theme, .nexdesk-workspace-theme) .nexdesk-tickets-directory .table { margin-bottom: 0; }
+:is(.nexdesk-admin-theme, .nexdesk-workspace-theme) .nexdesk-tickets-table-head th { padding: 12px 11px; color: #adc0df; background: #122846; border-bottom-color: #33517f; font-size: 10px; font-weight: 600; white-space: nowrap; }
+:is(.nexdesk-admin-theme, .nexdesk-workspace-theme) .nexdesk-tickets-directory tbody td { padding: 13px 11px; border-color: #29446f; font-size: 11px; }
+:is(.nexdesk-admin-theme, .nexdesk-workspace-theme) .nexdesk-tickets-directory tbody .small { font-size: 9px; }
+:is(.nexdesk-admin-theme, .nexdesk-workspace-theme) .nexdesk-tickets-directory .badge { padding: 5px 8px; font-size: 9px; font-weight: 600; }
+:is(.nexdesk-admin-theme, .nexdesk-workspace-theme) .nexdesk-tickets-directory .btn.btn-sm { min-height: 34px; padding: 6px 10px; font-size: 10px; }
+:is(.nexdesk-admin-theme, .nexdesk-workspace-theme) .nexdesk-tickets-directory tbody tr:hover > * { color: #f5f9ff; background: rgba(55, 114, 222, .1); }
+
+@media (max-width: 576px) {
+  .nexdesk-tickets-directory-title { flex-direction: column; gap: 3px; }
+  .nexdesk-tickets-directory-title > small { padding-top: 0; text-align: left; }
+}
+
+.nexdesk-workspace-dashboard {
+  display: grid;
+  grid-template-columns: minmax(285px, 1.7fr) repeat(3, minmax(125px, .86fr));
+  gap: 9px;
+  max-width: 1540px;
+  margin: 0 auto;
+}
+
+.nexdesk-workspace-hero {
+  position: relative;
+  grid-column: 1;
+  min-height: 88px;
+  overflow: hidden;
+  padding: 13px 21px;
+  border: 1px solid rgba(86, 104, 255, .52);
+  border-radius: 13px;
+  background: radial-gradient(circle at 67% 50%, rgba(67, 42, 229, .72), transparent 29%), linear-gradient(105deg, #172e89, #2820ab 53%, #241280);
+  box-shadow: inset 0 1px rgba(255, 255, 255, .1), 0 9px 23px rgba(25, 35, 169, .16);
+}
+
+.nexdesk-workspace-hero::before { position: absolute; top: -95px; right: 14px; width: 260px; height: 180px; content: ""; border: 1px solid rgba(133, 151, 255, .29); border-radius: 50%; transform: rotate(-14deg); }
+.nexdesk-workspace-hero-copy { position: relative; z-index: 1; max-width: 70%; }
+.nexdesk-workspace-role { display: inline-flex; align-items: center; gap: 5px; padding: 3px 7px; border: 1px solid rgba(201, 218, 255, .18); border-radius: 99px; color: #e7edff; background: rgba(148, 141, 255, .25); font-size: 8px; }
+.nexdesk-workspace-hero h1 { margin: 3px 0 1px; color: #fff; font-size: clamp(18px, 1.75vw, 24px); font-weight: 750; letter-spacing: -.5px; }
+.nexdesk-workspace-hero h1 span { font-size: .78em; }
+.nexdesk-workspace-hero p { margin: 0; color: #d7e2ff; font-size: 8px; }
+.nexdesk-workspace-hero .nexdesk-hero-laptop { top: -31px; right: -4px; width: 169px; height: 117px; }
+.nexdesk-workspace-error { grid-column: 1 / -1; padding: 8px 11px; border: 1px solid #914b5f; border-radius: 9px; color: #ffc8d2; background: #3a1b2c; font-size: 10px; }
+
+.nexdesk-workspace-stats { display: contents; }
+.nexdesk-workspace-stat {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  min-height: 88px;
+  align-items: center;
+  gap: 10px;
+  overflow: hidden;
+  padding: 10px;
+  border: 1px solid #294674;
+  border-radius: 13px;
+  color: #eaf2ff;
+  background: linear-gradient(145deg, #142a50, #0c1b38);
+  box-shadow: inset 0 1px rgba(255, 255, 255, .035);
+  text-decoration: none;
+  transition: transform .18s ease, border-color .18s ease;
+}
+
+.nexdesk-workspace-stat:nth-child(1) { grid-column: 2; }
+.nexdesk-workspace-stat:nth-child(2) { grid-column: 3; }
+.nexdesk-workspace-stat:nth-child(3) { grid-column: 4; }
+.nexdesk-workspace-stat:hover { color: #fff; border-color: #5281ca; transform: translateY(-2px); }
+.nexdesk-workspace-stat-icon { display: grid; width: 31px; height: 31px; flex: 0 0 31px; place-items: center; border-radius: 9px; }
+.nexdesk-workspace-stat.blue .nexdesk-workspace-stat-icon { color: #58c7ff; background: rgba(31, 152, 240, .18); }
+.nexdesk-workspace-stat.purple .nexdesk-workspace-stat-icon { color: #cf91ff; background: rgba(143, 67, 255, .18); }
+.nexdesk-workspace-stat.green .nexdesk-workspace-stat-icon { color: #53e5a3; background: rgba(30, 202, 125, .16); }
+.nexdesk-workspace-stat > span:nth-child(2) { display: flex; min-width: 0; flex-direction: column; }
+.nexdesk-workspace-stat small { overflow: hidden; color: #b8c7df; font-size: 8px; text-overflow: ellipsis; white-space: nowrap; }
+.nexdesk-workspace-stat strong { color: #f7faff; font-size: 21px; line-height: 1.15; }
+.nexdesk-workspace-stat em { position: absolute; right: 9px; bottom: 8px; color: #36db91; font-size: 11px; font-style: normal; opacity: .82; }
+.nexdesk-workspace-stat.purple em { color: #c479ff; }
+
+.nexdesk-workspace-main-grid { display: grid; grid-column: 1 / -1; grid-template-columns: minmax(280px, 1.42fr) minmax(260px, 1fr) minmax(190px, .72fr); gap: 9px; }
+.nexdesk-workspace-panel { min-width: 0; min-height: 121px; padding: 9px 11px; border: 1px solid #294572; border-radius: 12px; background: linear-gradient(145deg, #112647, #0c1c3a); box-shadow: inset 0 1px rgba(255, 255, 255, .025); }
+.nexdesk-workspace-panel-heading { display: flex; min-height: 19px; align-items: center; justify-content: space-between; gap: 6px; }
+.nexdesk-workspace-panel-heading h2 { display: flex; align-items: center; gap: 6px; margin: 0; color: #eff5ff; font-size: 10px; font-weight: 650; }
+.nexdesk-workspace-panel-heading h2 svg { color: #5ec4ff; }
+.nexdesk-workspace-panel-heading > a { color: #66b7ff; font-size: 8px; text-decoration: none; white-space: nowrap; }
+.nexdesk-workspace-panel-heading > a:hover { color: #b9e0ff; }
+.nexdesk-workspace-table-wrap { width: 100%; overflow-x: auto; }
+.nexdesk-workspace-table { width: 100%; margin-top: 5px; border-collapse: collapse; color: #d8e5fb; font-size: 8px; white-space: nowrap; }
+.nexdesk-workspace-table th { padding: 4px 3px; border-bottom: 1px solid #2b4775; color: #a7bad9; font-weight: 500; text-align: left; }
+.nexdesk-workspace-table td { max-width: 137px; overflow: hidden; padding: 5px 3px; border-bottom: 1px solid rgba(42, 66, 108, .7); text-overflow: ellipsis; }
+.nexdesk-workspace-table tr:last-child td { border-bottom: 0; }
+.nexdesk-workspace-priority { display: inline-block; padding: 2px 6px; border-radius: 5px; font-size: 8px; text-transform: capitalize; }
+.nexdesk-workspace-priority.alta { color: #ffc5ce; background: rgba(232, 62, 91, .32); }
+.nexdesk-workspace-priority.media { color: #ffe099; background: rgba(214, 145, 16, .35); }
+.nexdesk-workspace-priority.baja { color: #a9e8c7; background: rgba(23, 154, 91, .27); }
+.nexdesk-workspace-empty { height: 65px; color: #a9bad6; text-align: center; }
+
+.nexdesk-workspace-activity-panel .nexdesk-activity-chart { height: 95px; margin-top: 5px; }
+.nexdesk-workspace-activity-panel .nexdesk-activity-chart line { stroke: #28456f; }
+.nexdesk-workspace-activity-panel .nexdesk-activity-chart path[fill] { fill: url(#activityFill); }
+.nexdesk-workspace-chart-actions { display: flex; align-items: center; gap: 5px; }
+.nexdesk-workspace-chart-actions button,
+.nexdesk-workspace-chart-actions select { height: 21px; border: 1px solid #2d4b7e; border-radius: 6px; color: #cbdaf1; background: #152a4d; font: inherit; font-size: 8px; }
+.nexdesk-workspace-chart-actions button { display: grid; width: 22px; place-items: center; padding: 0; font-size: 13px; }
+.nexdesk-workspace-chart-actions select { max-width: 105px; padding: 0 5px; }
+.nexdesk-workspace-chart-actions button:hover:not(:disabled) { color: #fff; border-color: #5ca4ff; }
+.nexdesk-workspace-chart-actions button:disabled { opacity: .5; cursor: wait; }
+
+.nexdesk-workspace-actions { display: grid; gap: 5px; margin-top: 7px; }
+.nexdesk-workspace-actions a { display: flex; min-height: 26px; align-items: center; gap: 8px; padding: 5px 8px; border: 1px solid #2c4776; border-radius: 7px; color: #dce8fb; background: #15294b; font-size: 8px; text-decoration: none; transition: border-color .16s ease, transform .16s ease; }
+.nexdesk-workspace-actions a:hover { color: #fff; border-color: #5a95ec; transform: translateX(1px); }
+.nexdesk-workspace-actions a svg { color: #a9c9f9; }
+.nexdesk-workspace-actions a.primary { color: #fff; border-color: #5d76ff; background: linear-gradient(100deg, #178def, #3863f6 55%, #9a4ef1); box-shadow: 0 5px 12px rgba(44, 74, 236, .22); }
+.nexdesk-workspace-actions a.primary svg { color: #fff; }
+
+/* Dashboard operativo: distribución amplia y estados vacíos útiles */
+.nexdesk-workspace-dashboard {
+  grid-template-rows: minmax(120px, auto) minmax(300px, 1fr);
+  min-height: calc(100dvh - 75px);
+  align-items: stretch;
+}
+.nexdesk-workspace-hero { min-height: 120px; padding: 16px 19px; }
+.nexdesk-workspace-hero-copy { max-width: 66%; }
+.nexdesk-workspace-role { padding: 4px 8px; font-size: 9px; }
+.nexdesk-workspace-hero h1 { margin: 5px 0 3px; font-size: clamp(22px, 1.9vw, 29px); letter-spacing: -.65px; }
+.nexdesk-workspace-hero p { font-size: 10px; }
+.nexdesk-workspace-hero .nexdesk-hero-laptop { top: -25px; right: -1px; width: 191px; height: 132px; }
+.nexdesk-workspace-stat { min-height: 120px; padding: 15px 14px; }
+.nexdesk-workspace-stat-icon { width: 37px; height: 37px; flex-basis: 37px; border-radius: 11px; }
+.nexdesk-workspace-stat small { font-size: 10px; }
+.nexdesk-workspace-stat strong { font-size: 28px; line-height: 1.12; }
+.nexdesk-workspace-stat em { right: 12px; bottom: 10px; font-size: 13px; }
+.nexdesk-workspace-main-grid {
+  min-height: 0;
+  grid-template-columns: minmax(325px, 1.42fr) minmax(290px, 1fr) minmax(230px, .72fr);
+  gap: 11px;
+}
+.nexdesk-workspace-panel {
+  display: flex;
+  min-height: 0;
+  height: 100%;
+  flex-direction: column;
+  padding: 14px 15px;
+  border-radius: 14px;
+  box-shadow: inset 0 1px rgba(255, 255, 255, .025), 0 10px 25px rgba(1, 11, 32, .12);
+}
+.nexdesk-workspace-panel-heading { min-height: 26px; gap: 8px; }
+.nexdesk-workspace-panel-heading h2 { gap: 7px; font-size: 12px; }
+.nexdesk-workspace-panel-heading > a { font-size: 10px; }
+.nexdesk-workspace-table-wrap { flex: 1; }
+.nexdesk-workspace-table { margin-top: 10px; font-size: 10px; }
+.nexdesk-workspace-table th { padding: 8px 5px; font-weight: 600; }
+.nexdesk-workspace-table td { padding: 10px 5px; }
+.nexdesk-workspace-priority { padding: 3px 7px; font-size: 9px; }
+.nexdesk-workspace-empty-state {
+  display: flex;
+  width: min(310px, 100%);
+  flex: 1;
+  align-self: center;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 25px 15px 17px;
+  text-align: center;
+}
+.nexdesk-workspace-empty-icon { display: grid; width: 62px; height: 62px; place-items: center; border: 1px solid rgba(103, 174, 255, .28); border-radius: 19px; color: #6fc6ff; background: radial-gradient(circle at 30% 25%, rgba(43, 157, 255, .3), rgba(20, 68, 142, .16)); box-shadow: 0 10px 24px rgba(13, 89, 188, .14); }
+.nexdesk-workspace-empty-state h3 { margin: 15px 0 6px; color: #edf5ff; font-size: 14px; font-weight: 650; }
+.nexdesk-workspace-empty-state p { max-width: 280px; margin: 0; color: #9fb6d9; font-size: 10px; line-height: 1.55; }
+.nexdesk-workspace-empty-state a { margin-top: 15px; padding: 7px 11px; border: 1px solid #3976ca; border-radius: 8px; color: #dcedff; background: rgba(30, 85, 174, .22); font-size: 10px; text-decoration: none; }
+.nexdesk-workspace-empty-state a:hover { color: #fff; border-color: #69adff; background: rgba(45, 117, 227, .3); }
+.nexdesk-workspace-activity-panel .nexdesk-activity-chart { height: auto; min-height: 170px; flex: 1; margin-top: 12px; }
+.nexdesk-workspace-activity-panel .nexdesk-activity-chart svg { width: 100%; height: 100%; min-height: 170px; }
+.nexdesk-workspace-chart-actions button,
+.nexdesk-workspace-chart-actions select { height: 27px; border-radius: 7px; font-size: 9px; }
+.nexdesk-workspace-chart-actions button { width: 27px; font-size: 15px; }
+.nexdesk-workspace-chart-actions select { max-width: 115px; padding: 0 6px; }
+.nexdesk-workspace-activity-caption { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-top: 10px; border-top: 1px solid rgba(54, 83, 132, .65); color: #9db2d4; font-size: 9px; }
+.nexdesk-workspace-activity-caption span { display: inline-flex; align-items: center; gap: 5px; }
+.nexdesk-workspace-activity-caption i { width: 6px; height: 6px; border-radius: 50%; background: #4dc9f8; box-shadow: 0 0 0 3px rgba(77, 201, 248, .13); }
+.nexdesk-workspace-activity-caption small { color: #7f96bb; font-size: 8px; text-align: right; }
+.nexdesk-workspace-actions { gap: 7px; margin-top: 11px; }
+.nexdesk-workspace-actions a { min-height: 36px; gap: 9px; padding: 7px 10px; border-radius: 8px; font-size: 10px; }
+.nexdesk-workspace-actions-status { display: flex; align-items: flex-start; gap: 9px; margin-top: auto; padding: 12px 10px; border: 1px solid rgba(56, 151, 112, .35); border-radius: 10px; color: #d6f6e5; background: linear-gradient(135deg, rgba(19, 105, 78, .28), rgba(19, 64, 92, .28)); }
+.nexdesk-workspace-actions-status.has-pending { border-color: rgba(172, 111, 255, .35); color: #eadcff; background: linear-gradient(135deg, rgba(98, 42, 158, .3), rgba(30, 61, 117, .26)); }
+.nexdesk-workspace-actions-status > span { display: grid; width: 30px; height: 30px; flex: 0 0 30px; place-items: center; border-radius: 9px; color: #69e7ad; background: rgba(61, 194, 126, .15); }
+.nexdesk-workspace-actions-status.has-pending > span { color: #d29aff; background: rgba(170, 91, 255, .16); }
+.nexdesk-workspace-actions-status small { display: block; color: #a3cdb7; font-size: 8px; }
+.nexdesk-workspace-actions-status.has-pending small { color: #cdb4ed; }
+.nexdesk-workspace-actions-status strong { display: block; margin-top: 2px; color: inherit; font-size: 10px; font-weight: 650; }
+.nexdesk-workspace-actions-status p { margin: 4px 0 0; color: #9bb9c9; font-size: 8px; line-height: 1.4; }
+.nexdesk-workspace-actions-status.has-pending p { color: #bcaed1; }
+
+@media (max-width: 1100px) {
+  .nexdesk-workspace-dashboard { grid-template-columns: minmax(280px, 1.6fr) repeat(3, minmax(118px, .8fr)); }
+  .nexdesk-workspace-topbar .nexdesk-topbar-left { flex-basis: 32%; min-width: 195px; }
+  .nexdesk-workspace-theme .nexdesk-global-search { max-width: 250px; }
+  .nexdesk-workspace-main-grid { grid-template-columns: minmax(260px, 1.35fr) minmax(230px, 1fr); }
+  .nexdesk-workspace-actions-panel { grid-column: 1 / -1; }
+  .nexdesk-workspace-actions { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 991px) {
+  .nexdesk-workspace-theme .nexdesk-sidebar { width: 230px; }
+  .nexdesk-workspace-theme .nexdesk-main { margin-left: 0; }
+  .nexdesk-workspace-theme .nexdesk-content { padding: 12px; }
+  .nexdesk-workspace-topbar .nexdesk-topbar-left { flex: 0 0 auto; min-width: 0; }
+  .nexdesk-workspace-topbar .nexdesk-topbar-title small { display: none; }
+  .nexdesk-workspace-theme .nexdesk-global-search { max-width: none; }
+}
+
+@media (max-width: 720px) {
+  .nexdesk-workspace-theme .nexdesk-workspace-topbar { flex-wrap: wrap; }
+  .nexdesk-workspace-topbar .nexdesk-topbar-left { flex: 1; }
+  .nexdesk-workspace-theme .nexdesk-global-search { order: 3; flex: 1 0 100%; }
+  .nexdesk-workspace-topbar .nexdesk-topbar-right { margin-left: auto; }
+  .nexdesk-workspace-dashboard { display: flex; min-height: 0; flex-direction: column; }
+  .nexdesk-workspace-hero { min-height: 111px; }
+  .nexdesk-workspace-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; }
+  .nexdesk-workspace-stat:nth-child(n) { grid-column: auto; }
+  .nexdesk-workspace-main-grid { min-height: auto; grid-template-columns: 1fr; }
+  .nexdesk-workspace-panel { height: auto; min-height: 220px; }
+  .nexdesk-workspace-actions-panel { grid-column: auto; }
+}
+
+@media (max-width: 500px) {
+  .nexdesk-workspace-theme .nexdesk-user-info { display: none; }
+  .nexdesk-workspace-theme .nexdesk-topbar-right { gap: 5px; }
+  .nexdesk-dark-notifications { margin-right: 0; padding-right: 5px; }
+  .nexdesk-workspace-hero { padding: 13px; }
+  .nexdesk-workspace-hero-copy { max-width: 77%; }
+  .nexdesk-workspace-hero .nexdesk-hero-laptop { right: -31px; opacity: .65; }
+  .nexdesk-workspace-stats { grid-template-columns: 1fr; }
+  .nexdesk-workspace-stat { min-height: 64px; }
+  .nexdesk-workspace-actions { grid-template-columns: 1fr; }
+}
+
+/* Cambio de contraseña VORTIX */
+.nexdesk-password-page {
+  position: relative;
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  overflow: hidden;
+  padding: 28px;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 19% 18%, rgba(19, 119, 255, .2), transparent 27%),
+    radial-gradient(circle at 80% 76%, rgba(90, 48, 255, .22), transparent 30%),
+    linear-gradient(135deg, #050d25 0%, #091330 55%, #0b0d42 100%);
+}
+
+.nexdesk-password-page::before,
+.nexdesk-password-page::after {
+  position: absolute;
+  z-index: -2;
+  content: "";
+  width: 950px;
+  height: 390px;
+  border: 2px solid rgba(52, 109, 255, .67);
+  border-radius: 50%;
+  filter: drop-shadow(0 0 10px rgba(53, 114, 255, .6));
+}
+
+.nexdesk-password-page::before { top: -220px; left: -210px; transform: rotate(-30deg); }
+.nexdesk-password-page::after { right: -310px; bottom: -250px; border-color: rgba(99, 71, 255, .62); transform: rotate(25deg); }
+.nexdesk-password-orbit { position: absolute; z-index: -1; width: 700px; height: 230px; border: 1px solid rgba(83, 94, 255, .7); border-radius: 50%; filter: drop-shadow(0 0 8px rgba(82, 70, 255, .55)); }
+.nexdesk-password-orbit-one { top: 14%; right: 55%; transform: rotate(-25deg); }
+.nexdesk-password-orbit-two { bottom: 11%; left: 56%; transform: rotate(24deg); }
+
+.nexdesk-password-shell {
+  display: grid;
+  grid-template-columns: minmax(265px, .88fr) minmax(335px, 1.12fr);
+  width: min(100%, 760px);
+  min-height: 530px;
+  overflow: hidden;
+  border: 1px solid rgba(107, 138, 255, .54);
+  border-radius: 23px;
+  background: rgba(8, 18, 48, .87);
+  box-shadow: 0 25px 64px rgba(0, 1, 22, .52), inset 0 1px rgba(255, 255, 255, .08);
+  backdrop-filter: blur(16px);
+}
+
+.nexdesk-password-showcase {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 30px 34px;
+  background:
+    radial-gradient(circle at 43% 44%, rgba(28, 117, 255, .35), transparent 34%),
+    linear-gradient(153deg, #123e9c, #142465 56%, #211479);
+}
+
+.nexdesk-password-showcase::before { position: absolute; top: -88px; right: -95px; width: 270px; height: 450px; content: ""; border-radius: 47%; background: linear-gradient(170deg, rgba(4, 15, 63, .87), rgba(24, 21, 114, .04)); transform: rotate(16deg); }
+.nexdesk-password-showcase > * { position: relative; z-index: 1; }
+.nexdesk-password-logo { display: flex; align-items: center; gap: 9px; color: #f6f9ff; font-size: 15px; letter-spacing: .2px; }
+.nexdesk-password-logo span { display: grid; width: 30px; height: 30px; place-items: center; border-radius: 9px; background: linear-gradient(145deg, #2eb4ff, #315df3); box-shadow: 0 5px 14px rgba(18, 88, 245, .45); font-size: 19px; font-weight: 800; }
+.nexdesk-password-shield { display: grid; width: 118px; height: 118px; margin: 42px auto 20px; place-items: center; border: 1px solid rgba(144, 204, 255, .26); border-radius: 50%; color: #74ceff; background: radial-gradient(circle, rgba(42, 150, 255, .25), rgba(30, 77, 204, .1) 58%, transparent 60%); box-shadow: 0 0 0 17px rgba(42, 121, 255, .07), 0 0 34px rgba(33, 154, 255, .28); }
+.nexdesk-password-section-label { color: #a9cbff; font-size: 8px; font-weight: 700; letter-spacing: 1px; }
+.nexdesk-password-showcase h1 { margin: 7px 0; color: #fff; font-size: 25px; font-weight: 750; line-height: 1.12; letter-spacing: -.5px; }
+.nexdesk-password-showcase > p { max-width: 250px; margin: 0; color: #c6d8f8; font-size: 10px; line-height: 1.55; }
+.nexdesk-password-showcase ul { display: grid; gap: 8px; margin: auto 0 0; padding: 0; list-style: none; color: #d8e6ff; font-size: 9px; }
+.nexdesk-password-showcase li { display: flex; align-items: center; gap: 8px; }
+.nexdesk-password-showcase li svg { color: #74caff; }
+
+.nexdesk-password-form-side { display: grid; place-items: center; padding: 30px 46px 24px; background: radial-gradient(circle at 90% 0%, rgba(87, 58, 255, .18), transparent 27%), linear-gradient(155deg, rgba(7, 21, 55, .97), rgba(6, 15, 40, .98)); }
+.nexdesk-password-form-content { width: min(100%, 318px); }
+.nexdesk-password-form-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.nexdesk-password-form-icon { display: grid; width: 38px; height: 38px; margin-bottom: 9px; place-items: center; border: 1px solid rgba(121, 187, 255, .34); border-radius: 11px; color: #b9e4ff; background: linear-gradient(145deg, rgba(31, 156, 240, .42), rgba(53, 72, 243, .39)); box-shadow: 0 7px 17px rgba(36, 97, 253, .24); }
+.nexdesk-password-form-top h2 { margin: 0; color: #f3f6ff; font-size: 19px; font-weight: 700; letter-spacing: -.3px; }
+.nexdesk-password-form-top p { margin: 3px 0 0; color: #92a5c7; font-size: 9px; }
+.nexdesk-password-back { display: grid; width: 32px; height: 32px; flex: 0 0 32px; place-items: center; border: 1px solid #2d4777; border-radius: 8px; color: #bcd5f9; background: #122342; }
+.nexdesk-password-back:hover { color: #fff; border-color: #5b9df3; background: #1a345e; }
+
+.nexdesk-password-account { display: flex; align-items: center; gap: 9px; margin: 19px 0 13px; padding: 9px 10px; border: 1px solid #29456f; border-radius: 10px; background: #0e1d3a; }
+.nexdesk-password-account > span { display: grid; width: 30px; height: 30px; flex: 0 0 30px; place-items: center; border-radius: 50%; color: #fff; background: linear-gradient(145deg, #32aff6, #2c61ef); font-size: 12px; font-weight: 700; }
+.nexdesk-password-account div { display: flex; min-width: 0; flex-direction: column; }
+.nexdesk-password-account small { color: #8298bd; font-size: 7px; letter-spacing: .55px; }
+.nexdesk-password-account strong { overflow: hidden; margin-top: 2px; color: #dce7fa; font-size: 9px; font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
+.nexdesk-password-notice { display: flex; align-items: center; gap: 7px; margin-bottom: 12px; padding: 8px 9px; border: 1px solid rgba(232, 180, 62, .4); border-radius: 8px; color: #ffe2a0; background: rgba(145, 102, 16, .2); font-size: 9px; line-height: 1.35; }
+.nexdesk-password-notice svg { flex: 0 0 auto; color: #ffd365; }
+.nexdesk-password-error { margin-bottom: 12px; padding: 8px 9px; border: 1px solid rgba(255, 95, 126, .48); border-radius: 8px; color: #ffc5d0; background: rgba(166, 28, 61, .28); font-size: 9px; }
+
+.nexdesk-password-form { display: grid; gap: 11px; }
+.nexdesk-password-field { display: grid; gap: 5px; }
+.nexdesk-password-field label { display: flex; align-items: center; gap: 6px; color: #d9e5f9; font-size: 9px; font-weight: 600; }
+.nexdesk-password-field label svg { color: #bbcef0; }
+.nexdesk-password-field > small { margin-top: -3px; color: #8296b9; font-size: 8px; }
+.nexdesk-password-input { display: flex; height: 36px; align-items: center; overflow: hidden; border: 1px solid #2b4776; border-radius: 8px; background: #0d1b37; transition: border-color .18s ease, box-shadow .18s ease; }
+.nexdesk-password-input:focus-within { border-color: #5498ff; box-shadow: 0 0 0 3px rgba(67, 139, 255, .15); }
+.nexdesk-password-input input { width: 100%; height: 100%; min-width: 0; padding: 0 10px; border: 0; outline: 0; color: #edf4ff; background: transparent; font: inherit; font-size: 10px; }
+.nexdesk-password-input button { display: grid; width: 35px; height: 100%; flex: 0 0 35px; place-items: center; border: 0; color: #9fb4d7; background: transparent; }
+.nexdesk-password-input button:hover { color: #e4efff; }
+.nexdesk-password-submit { display: flex; height: 39px; align-items: center; justify-content: center; gap: 7px; margin-top: 4px; border: 1px solid rgba(138, 206, 255, .28); border-radius: 8px; color: #fff; background: linear-gradient(100deg, #18ace8, #2b72f5 50%, #6036f2); box-shadow: 0 8px 18px rgba(39, 75, 229, .28), inset 0 1px rgba(255, 255, 255, .2); font: inherit; font-size: 10px; font-weight: 650; transition: transform .18s ease, filter .18s ease; }
+.nexdesk-password-submit:hover:not(:disabled) { filter: brightness(1.1); transform: translateY(-1px); }
+.nexdesk-password-submit:disabled { cursor: wait; opacity: .72; }
+.nexdesk-password-logout { display: block; margin: 12px auto 0; padding: 0; border: 0; color: #91a6ca; background: transparent; font: inherit; font-size: 9px; }
+.nexdesk-password-logout:hover { color: #d2e1fa; text-decoration: underline; }
+
+@media (max-width: 680px) {
+  .nexdesk-password-page { padding: 18px; }
+  .nexdesk-password-shell { display: block; width: min(100%, 410px); min-height: 0; }
+  .nexdesk-password-showcase { display: none; }
+  .nexdesk-password-form-side { min-height: 560px; padding: 30px 28px 24px; }
+}
+
+@media (max-width: 390px) {
+  .nexdesk-password-page { padding: 10px; }
+  .nexdesk-password-shell { border-radius: 18px; }
+  .nexdesk-password-form-side { min-height: 100vh; padding: 28px 21px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nexdesk-password-page *,
+  .nexdesk-password-page *::before,
+  .nexdesk-password-page *::after { transition: none !important; }
+}
+
+/* Menú de cuenta */
+.nexdesk-account-dropdown .nexdesk-user-chevron { transition: transform .18s ease; }
+.nexdesk-account-dropdown.show .nexdesk-user-chevron { transform: rotate(180deg); }
+.nexdesk-account-menu {
+  width: 292px;
+  max-height: min(72vh, 560px);
+  overflow-y: auto;
+  margin-top: 9px !important;
+  padding: 9px;
+  border: 1px solid #2d4775 !important;
+  border-radius: 15px;
+  color: #e7efff;
+  background: linear-gradient(155deg, #122548, #0d1c39 70%);
+  box-shadow: 0 18px 48px rgba(1, 9, 28, .48), inset 0 1px rgba(255, 255, 255, .045);
+}
+.nexdesk-admin-theme .nexdesk-account-menu,
+.nexdesk-workspace-theme .nexdesk-account-menu { border-color: #2d4775 !important; background: linear-gradient(155deg, #122548, #0d1c39 70%); }
+.nexdesk-account-summary {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+  padding: 11px;
+  border: 1px solid rgba(99, 151, 231, .17);
+  border-radius: 11px;
+  background: linear-gradient(130deg, rgba(50, 106, 187, .19), rgba(81, 63, 175, .13));
+}
+.nexdesk-account-summary .nexdesk-avatar { width: 42px; height: 42px; flex: 0 0 42px; font-size: 15px; }
+.nexdesk-account-summary-copy { display: flex; min-width: 0; flex: 1; flex-direction: column; gap: 3px; }
+.nexdesk-account-summary-copy strong { overflow: hidden; color: #f5f8ff; font-size: 12px; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+.nexdesk-account-summary-copy span { overflow: hidden; color: #aebfdd; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.nexdesk-account-summary-copy small { color: #7fc8ff; font-size: 9px; font-weight: 600; }
+.nexdesk-account-group { padding: 10px 3px 3px; border-top: 1px solid rgba(117, 148, 196, .15); margin-top: 8px; }
+.nexdesk-account-heading { display: block; margin: 0 8px 5px; color: #8196b9; font-size: 8px; font-weight: 700; letter-spacing: .8px; }
+.nexdesk-account-action {
+  display: flex;
+  width: 100%;
+  min-height: 43px;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 7px;
+  border: 0;
+  border-radius: 9px;
+  color: #e2ebfb;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+  text-decoration: none;
+  transition: background .16s ease, color .16s ease, transform .16s ease;
+}
+.nexdesk-account-action:hover:not(:disabled),
+.nexdesk-account-action:focus-visible { color: #fff; background: rgba(92, 139, 216, .15); }
+.nexdesk-account-action:focus-visible,
+.nexdesk-account-signout:focus-visible { outline: 2px solid #7bb9ff; outline-offset: 1px; }
+.nexdesk-account-action:active:not(:disabled) { transform: scale(.99); }
+.nexdesk-account-action:disabled { cursor: wait; opacity: .65; }
+.nexdesk-account-action-icon { display: grid; width: 29px; height: 29px; flex: 0 0 29px; place-items: center; border: 1px solid rgba(127, 168, 231, .16); border-radius: 8px; color: #9ccaff; background: rgba(54, 104, 176, .17); }
+.nexdesk-account-action-copy { display: flex; min-width: 0; flex: 1; flex-direction: column; gap: 2px; }
+.nexdesk-account-action-copy strong { color: inherit; font-size: 10px; font-weight: 600; }
+.nexdesk-account-action-copy small { color: #90a5c7; font-size: 8px; line-height: 1.3; }
+.nexdesk-account-action-arrow { color: #7892b8; font-size: 17px; line-height: 1; }
+.nexdesk-account-action-danger { color: #ffd5dc; }
+.nexdesk-account-action-danger .nexdesk-account-action-icon { color: #ff9baa; border-color: rgba(224, 92, 119, .2); background: rgba(139, 39, 62, .17); }
+.nexdesk-account-action-danger:hover:not(:disabled) { background: rgba(177, 48, 73, .15); }
+.nexdesk-account-signout { display: flex; width: 100%; align-items: center; gap: 9px; margin-top: 7px; padding: 9px 11px; border: 1px solid rgba(219, 95, 119, .2); border-radius: 9px; color: #ffb3c0; background: rgba(133, 36, 58, .13); font: inherit; font-size: 10px; font-weight: 600; text-align: left; cursor: pointer; transition: background .16s ease, border-color .16s ease; }
+.nexdesk-account-signout:hover { border-color: rgba(244, 113, 137, .4); color: #ffe1e6; background: rgba(159, 42, 66, .23); }
+.nexdesk-account-signout svg { color: #ff96a9; }
+.nexdesk-account-menu .nexdesk-foto-feedback { margin: 6px 5px 2px; color: #a9d7ff; font-size: 9px; }
+
+@media (max-width: 480px) {
+  .nexdesk-account-menu { width: min(292px, calc(100vw - 20px)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nexdesk-account-dropdown .nexdesk-user-chevron,
+  .nexdesk-account-action,
+  .nexdesk-account-signout { transition: none; }
+}
+
+/* Perfil personal */
+.nexdesk-perfil-page { width: min(100%, 1320px); margin: 0 auto; }
+.nexdesk-perfil-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; margin-bottom: 22px; }
+.nexdesk-perfil-eyebrow { display: block; margin-bottom: 6px; color: #7ebdff; font-size: 9px; font-weight: 750; letter-spacing: 1.35px; }
+.nexdesk-perfil-heading h1 { margin: 0; color: #f4f7ff; font-size: clamp(23px, 2.3vw, 30px); font-weight: 700; letter-spacing: -.55px; }
+.nexdesk-perfil-heading p { margin: 5px 0 0; color: #9eafcd; font-size: 12px; }
+.nexdesk-perfil-password-link { display: inline-flex; align-items: center; gap: 8px; padding: 9px 12px; border: 1px solid #304a75; border-radius: 9px; color: #c8dcfb; background: rgba(20, 39, 72, .55); font-size: 10px; font-weight: 600; text-decoration: none; transition: .18s ease; }
+.nexdesk-perfil-password-link:hover { border-color: #548be0; color: #fff; background: #172c50; }
+.nexdesk-perfil-layout { display: grid; grid-template-columns: minmax(250px, .8fr) minmax(0, 1.8fr); align-items: start; gap: 18px; }
+.nexdesk-perfil-summary,
+.nexdesk-perfil-form-card { overflow: hidden; border-radius: 15px; box-shadow: 0 12px 30px rgba(0, 7, 24, .12); }
+.nexdesk-perfil-summary { position: relative; }
+.nexdesk-perfil-summary-cover { height: 94px; background: radial-gradient(circle at 84% 12%, rgba(135, 175, 255, .55), transparent 29%), linear-gradient(115deg, #187fdf 0%, #3557e7 54%, #7650d9 100%); }
+.nexdesk-perfil-summary-cover::after { display: block; width: 170px; height: 170px; margin: -95px 0 0 62%; border: 1px solid rgba(255, 255, 255, .14); border-radius: 50%; content: ""; box-shadow: 0 0 0 20px rgba(255, 255, 255, .035), 0 0 0 42px rgba(255, 255, 255, .025); }
+.nexdesk-perfil-summary-body { position: relative; margin-top: -50px; padding: 0 22px 22px; text-align: center; }
+.nexdesk-perfil-active { position: absolute; top: -28px; left: 18px; display: inline-flex; align-items: center; gap: 6px; padding: 5px 8px; border: 1px solid rgba(255, 255, 255, .2); border-radius: 20px; color: #f3f8ff; background: rgba(11, 25, 51, .57); font-size: 8px; font-weight: 650; backdrop-filter: blur(8px); }
+.nexdesk-perfil-active i { width: 6px; height: 6px; border-radius: 50%; background: #51e0a0; box-shadow: 0 0 8px rgba(81, 224, 160, .8); }
+.nexdesk-perfil-summary .nexdesk-perfil-avatar { width: 94px; height: 94px; flex: 0 0 94px; margin-bottom: 12px; border: 4px solid #111d38; font-size: 30px; box-shadow: 0 5px 20px rgba(0, 0, 0, .3); }
+.nexdesk-admin-theme .nexdesk-content .nexdesk-perfil-summary .nexdesk-perfil-avatar,
+.nexdesk-workspace-theme .nexdesk-content .nexdesk-perfil-summary .nexdesk-perfil-avatar { width: 94px; height: 94px; flex: 0 0 94px; font-size: 30px; }
+.nexdesk-perfil-summary h2 { overflow: hidden; margin: 0; color: #f3f7ff; font-size: 18px; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+.nexdesk-perfil-role { display: inline-flex; margin-top: 8px; padding: 4px 9px; border: 1px solid rgba(96, 164, 255, .22); border-radius: 20px; color: #a9d4ff; background: rgba(42, 112, 202, .15); font-size: 8px; font-weight: 700; letter-spacing: .3px; }
+.nexdesk-perfil-facts { display: grid; gap: 1px; margin: 20px 0 15px; padding: 8px 0; border-top: 1px solid rgba(115, 148, 196, .16); border-bottom: 1px solid rgba(115, 148, 196, .16); text-align: left; }
+.nexdesk-perfil-facts > div { display: flex; min-width: 0; align-items: center; gap: 9px; padding: 7px 2px; }
+.nexdesk-perfil-fact-icon { display: grid; width: 29px; height: 29px; flex: 0 0 29px; place-items: center; border: 1px solid rgba(121, 163, 229, .16); border-radius: 8px; color: #88bfff; background: rgba(46, 93, 158, .15); }
+.nexdesk-perfil-facts > div > span:last-child { display: flex; min-width: 0; flex-direction: column; gap: 2px; }
+.nexdesk-perfil-facts small { color: #8499bd; font-size: 8px; }
+.nexdesk-perfil-facts strong { overflow: hidden; color: #dce7fa; font-size: 9px; font-weight: 550; text-overflow: ellipsis; white-space: nowrap; }
+.nexdesk-perfil-photo-tools { display: flex; justify-content: center; gap: 7px; }
+.nexdesk-perfil-photo-change,
+.nexdesk-perfil-photo-remove { display: inline-flex; min-height: 32px; align-items: center; justify-content: center; gap: 6px; padding: 7px 10px; border: 1px solid #345883; border-radius: 8px; color: #cce4ff; background: rgba(30, 72, 121, .2); font: inherit; font-size: 9px; font-weight: 650; cursor: pointer; transition: .16s ease; }
+.nexdesk-perfil-photo-change:hover:not(:disabled),
+.nexdesk-perfil-photo-remove:hover:not(:disabled) { border-color: #5796e5; color: #fff; background: rgba(50, 111, 183, .25); }
+.nexdesk-perfil-photo-remove { width: 33px; padding: 0; color: #ffb1bf; border-color: rgba(194, 82, 108, .35); background: rgba(132, 43, 64, .13); }
+.nexdesk-perfil-photo-remove:hover:not(:disabled) { border-color: #d46c84; background: rgba(157, 45, 71, .25); }
+.nexdesk-perfil-photo-tools button:disabled { cursor: wait; opacity: .65; }
+.nexdesk-perfil-photo-hint { display: block; margin-top: 7px; color: #8196b8; font-size: 8px; }
+.nexdesk-perfil-photo-message { margin: 7px 0 0; color: #a9d7ff; font-size: 9px; line-height: 1.4; }
+.nexdesk-perfil-form-header { display: flex; align-items: center; gap: 11px; padding: 16px 19px; }
+.nexdesk-perfil-form-icon { display: grid; width: 36px; height: 36px; flex: 0 0 36px; place-items: center; border: 1px solid rgba(91, 151, 228, .25); border-radius: 10px; color: #94caff; background: rgba(47, 103, 173, .17); }
+.nexdesk-perfil-form-header h2 { margin: 0; color: #f0f5ff; font-size: 13px; font-weight: 650; }
+.nexdesk-perfil-form-header p { margin: 3px 0 0; color: #91a6c8; font-size: 9px; }
+.nexdesk-perfil-editable-tag { margin-left: auto; padding: 5px 8px; border: 1px solid rgba(67, 201, 148, .24); border-radius: 20px; color: #91e5c1; background: rgba(31, 140, 100, .12); font-size: 8px; font-weight: 650; }
+.nexdesk-perfil-form-body { padding: 19px; }
+.nexdesk-perfil-fields-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 13px; }
+.nexdesk-perfil-fields-heading > span,
+.nexdesk-perfil-access-heading > div > span { color: #8ca4c9; font-size: 8px; font-weight: 750; letter-spacing: .9px; }
+.nexdesk-perfil-fields-heading small { color: #8296b7; font-size: 8px; }
+.nexdesk-perfil-required { color: #77baff; font-size: 12px; }
+.nexdesk-perfil-field-hint { margin-top: 5px; color: #8398ba; font-size: 8px; }
+.nexdesk-perfil-access-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 20px 0 11px; padding-top: 16px; border-top: 1px solid rgba(116, 149, 198, .16); }
+.nexdesk-perfil-access-heading > div { display: flex; flex-direction: column; gap: 3px; }
+.nexdesk-perfil-access-heading > div > small { color: #8398ba; font-size: 8px; }
+.nexdesk-perfil-access-heading > svg { color: #8199bf; }
+.nexdesk-perfil-readonly-field .form-label { margin-bottom: 6px; }
+.nexdesk-perfil-access-group .nexdesk-perfil-access-icon,
+.nexdesk-perfil-access-group .nexdesk-perfil-readonly-mark { display: flex; align-items: center; justify-content: center; padding: 0 11px; border: 1px solid #2e4a79; color: #8fa8cc; background: #0d1b37; }
+.nexdesk-perfil-access-group .nexdesk-perfil-access-icon { border-right: 0; border-radius: 7px 0 0 7px; }
+.nexdesk-perfil-access-group .form-control { min-width: 0; }
+.nexdesk-perfil-access-group .nexdesk-perfil-readonly-mark { border-left: 0; border-radius: 0 7px 7px 0; color: #8fa7c8; font-size: 8px; white-space: nowrap; }
+.nexdesk-perfil-form-footer { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 12px 18px; }
+.nexdesk-perfil-form-footer > span { display: flex; align-items: center; gap: 7px; color: #8fa5c6; font-size: 8px; }
+.nexdesk-perfil-form-footer > span svg { flex: 0 0 auto; color: #75b6f4; }
+.nexdesk-perfil-form-footer > div { display: flex; flex: 0 0 auto; gap: 8px; }
+.nexdesk-perfil-form-footer .btn { min-height: 34px; padding: 7px 12px; font-size: 9px; font-weight: 600; }
+.nexdesk-perfil-form-footer .btn-primary { border: 0; background: linear-gradient(105deg, #287fe8, #6550df); box-shadow: 0 5px 14px rgba(53, 87, 217, .22); }
+.nexdesk-perfil-form-footer .btn-primary:hover:not(:disabled) { filter: brightness(1.1); transform: translateY(-1px); }
+
+@media (max-width: 900px) {
+  .nexdesk-perfil-layout { grid-template-columns: minmax(0, 1fr); }
+  .nexdesk-perfil-summary-body { padding-right: 26px; padding-left: 26px; }
+}
+@media (max-width: 580px) {
+  .nexdesk-perfil-heading { align-items: flex-start; flex-direction: column; margin-bottom: 16px; }
+  .nexdesk-perfil-heading p { max-width: 38ch; }
+  .nexdesk-perfil-form-header { padding: 13px; }
+  .nexdesk-perfil-form-header p { max-width: 27ch; line-height: 1.35; }
+  .nexdesk-perfil-editable-tag { padding: 4px 6px; }
+  .nexdesk-perfil-form-body { padding: 14px; }
+  .nexdesk-perfil-fields-heading { align-items: flex-start; flex-direction: column; gap: 3px; }
+  .nexdesk-perfil-form-footer { align-items: stretch; flex-direction: column; }
+  .nexdesk-perfil-form-footer > div { justify-content: flex-end; }
+}
+
+/* Navegacion renovada del espacio de trabajo */
+.nexdesk-workspace-theme .nexdesk-workspace-nav { padding: 13px 9px 12px; }
+.nexdesk-workspace-theme .nexdesk-workspace-nav-intro {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  margin: 0 1px 5px;
+  padding: 7px;
+  border: 1px solid rgba(105, 144, 208, .16);
+  border-radius: 10px;
+  background: linear-gradient(120deg, rgba(32, 75, 139, .28), rgba(16, 37, 74, .34));
+}
+.nexdesk-workspace-theme .nexdesk-workspace-nav-intro-icon {
+  display: grid;
+  width: 29px;
+  height: 29px;
+  flex: 0 0 29px;
+  place-items: center;
+  border: 1px solid rgba(103, 179, 255, .24);
+  border-radius: 8px;
+  color: #8acbff;
+  background: rgba(37, 126, 224, .19);
+}
+.nexdesk-workspace-theme .nexdesk-workspace-nav-intro-copy { display: flex; min-width: 0; flex-direction: column; gap: 3px; }
+.nexdesk-workspace-theme .nexdesk-workspace-nav-intro-copy small { color: #8ca8d3; font-size: 6.5px; font-weight: 700; letter-spacing: .08em; white-space: nowrap; }
+.nexdesk-workspace-theme .nexdesk-workspace-nav-intro-copy strong { overflow: hidden; color: #eef5ff; font-size: 9px; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+.nexdesk-workspace-theme .nexdesk-workspace-nav > .nexdesk-sidebar-label { padding: 14px 5px 7px; color: #7f98bf; font-size: 7px; font-weight: 750; letter-spacing: .13em; }
+.nexdesk-workspace-theme .nexdesk-workspace-nav > .nexdesk-sidebar-label-separated { margin-top: auto; padding-top: 12px; border-top: 1px solid #1d3357; }
+.nexdesk-workspace-theme .nexdesk-workspace-nav .nexdesk-nav-link {
+  min-height: 37px;
+  gap: 8px;
+  padding: 4px 7px;
+  margin-bottom: 4px;
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  color: #b8c8e1;
+  font-size: 9px;
+  transition: color .16s ease, background .16s ease, border-color .16s ease, transform .16s ease;
+}
+.nexdesk-workspace-theme .nexdesk-workspace-nav .nexdesk-nav-link:hover { transform: translateX(2px); border-color: rgba(102, 157, 235, .18); background: rgba(66, 122, 203, .11); }
+.nexdesk-workspace-theme .nexdesk-workspace-nav-icon {
+  display: grid;
+  width: 25px;
+  height: 25px;
+  flex: 0 0 25px;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  color: #8fa8ce;
+  background: rgba(133, 163, 207, .07);
+  transition: color .16s ease, background .16s ease, border-color .16s ease;
+}
+.nexdesk-workspace-theme .nexdesk-workspace-nav .nexdesk-nav-link.activo {
+  border-color: rgba(71, 145, 255, .42);
+  color: #fff;
+  background: linear-gradient(105deg, rgba(23, 128, 237, .27), rgba(49, 77, 222, .27));
+  box-shadow: inset 0 1px rgba(255, 255, 255, .055), 0 5px 13px rgba(0, 11, 42, .19);
+}
+.nexdesk-workspace-theme .nexdesk-workspace-nav .nexdesk-nav-link.activo::before { position: absolute; top: 7px; bottom: 7px; left: 0; width: 3px; border-radius: 0 3px 3px 0; background: #54baff; box-shadow: 0 0 10px rgba(53, 173, 255, .72); content: ""; }
+.nexdesk-workspace-theme .nexdesk-workspace-nav .nexdesk-nav-link.activo .nexdesk-workspace-nav-icon { border-color: rgba(92, 177, 255, .35); color: #c6eaff; background: linear-gradient(145deg, rgba(27, 156, 241, .4), rgba(59, 86, 225, .42)); }
+.nexdesk-workspace-theme .nexdesk-workspace-nav .nexdesk-nav-link.activo > span:nth-child(2) { font-weight: 650; }
+.nexdesk-workspace-theme .nexdesk-workspace-nav .nexdesk-workspace-logout { margin-top: 2px; }
+.nexdesk-workspace-theme .nexdesk-workspace-nav .nexdesk-workspace-logout .nexdesk-workspace-nav-icon { color: #eda4ae; background: rgba(206, 83, 103, .09); }
+
+/* Vista dedicada para el archivo de tickets finalizados */
+.nexdesk-workspace-theme .nexdesk-tickets-history-page { max-width: 1240px; }
+.nexdesk-workspace-theme .nexdesk-history-heading { align-items: center !important; margin-bottom: 17px !important; }
+.nexdesk-workspace-theme .nexdesk-history-page-title h1 { margin: 7px 0 4px; color: #f4f7ff; font-size: clamp(22px, 2.1vw, 29px); font-weight: 720; letter-spacing: -.55px; }
+.nexdesk-workspace-theme .nexdesk-history-page-title p { margin: 0; color: #9fb3d4; font-size: 11px; }
+.nexdesk-workspace-theme .nexdesk-history-eyebrow { display: inline-flex; align-items: center; gap: 6px; color: #83baff; font-size: 8px; font-weight: 750; letter-spacing: .13em; }
+.nexdesk-workspace-theme .nexdesk-history-refresh { display: inline-flex; align-items: center; gap: 7px; border: 1px solid #2b497a; color: #d5e6ff; background: #102242; font-size: 10px; }
+.nexdesk-workspace-theme .nexdesk-history-refresh:hover { border-color: #4b82c9; color: #fff; background: #17315b; }
+.nexdesk-workspace-theme .nexdesk-ticket-history { max-width: 1130px; margin: 0 auto; }
+.nexdesk-workspace-theme .nexdesk-history-overview { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 13px; }
+.nexdesk-workspace-theme .nexdesk-history-stat { display: flex; min-height: 69px; align-items: center; gap: 10px; padding: 11px 13px; border: 1px solid #263f68; border-radius: 11px; background: linear-gradient(135deg, rgba(19, 42, 77, .96), rgba(14, 30, 58, .96)); }
+.nexdesk-workspace-theme .nexdesk-history-stat-total { border-color: #345386; background: linear-gradient(120deg, rgba(25, 65, 119, .62), rgba(15, 33, 64, .96)); }
+.nexdesk-workspace-theme .nexdesk-history-stat-icon { display: grid; width: 34px; height: 34px; flex: 0 0 34px; place-items: center; border: 1px solid rgba(93, 163, 248, .2); border-radius: 9px; color: #8bcaff; background: rgba(36, 126, 222, .14); }
+.nexdesk-workspace-theme .nexdesk-history-stat-icon.resolved { border-color: rgba(70, 202, 150, .2); color: #7ce1ba; background: rgba(26, 159, 111, .12); }
+.nexdesk-workspace-theme .nexdesk-history-stat-icon.closed { border-color: rgba(167, 145, 255, .2); color: #b9a9ff; background: rgba(111, 86, 220, .13); }
+.nexdesk-workspace-theme .nexdesk-history-stat > span:last-child { display: flex; min-width: 0; flex-direction: column; gap: 2px; }
+.nexdesk-workspace-theme .nexdesk-history-stat small { color: #99afd1; font-size: 9px; }
+.nexdesk-workspace-theme .nexdesk-history-stat strong { color: #f0f5ff; font-size: 18px; line-height: 1.05; }
+.nexdesk-workspace-theme .nexdesk-history-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 10px; padding: 10px; border: 1px solid #263e66; border-radius: 11px; background: rgba(14, 29, 55, .86); }
+.nexdesk-workspace-theme .nexdesk-history-search { display: flex; min-width: 200px; max-width: 420px; min-height: 35px; flex: 1; align-items: center; gap: 8px; padding: 0 10px; border: 1px solid #2a456f; border-radius: 8px; color: #8ea9d0; background: #0c1b36; }
+.nexdesk-workspace-theme .nexdesk-history-search:focus-within { border-color: #438ce0; box-shadow: 0 0 0 3px rgba(56, 132, 226, .11); }
+.nexdesk-workspace-theme .nexdesk-history-search input { width: 100%; min-width: 0; border: 0; outline: 0; color: #e9f2ff; background: transparent; font: inherit; font-size: 10px; }
+.nexdesk-workspace-theme .nexdesk-history-search input::placeholder { color: #8298bb; }
+.nexdesk-workspace-theme .nexdesk-history-search input::-webkit-search-cancel-button { cursor: pointer; }
+.nexdesk-workspace-theme .nexdesk-history-filters { display: flex; flex-wrap: wrap; gap: 4px; }
+.nexdesk-workspace-theme .nexdesk-history-filters button { display: inline-flex; min-height: 29px; align-items: center; gap: 6px; padding: 4px 8px; border: 1px solid transparent; border-radius: 7px; color: #a9bbd8; background: transparent; font: inherit; font-size: 9px; cursor: pointer; }
+.nexdesk-workspace-theme .nexdesk-history-filters button:hover { color: #eef5ff; background: rgba(92, 132, 195, .12); }
+.nexdesk-workspace-theme .nexdesk-history-filters button.activo { border-color: #345b91; color: #eff6ff; background: linear-gradient(110deg, rgba(27, 122, 210, .23), rgba(61, 73, 188, .22)); }
+.nexdesk-workspace-theme .nexdesk-history-filters button span { min-width: 16px; padding: 1px 4px; border-radius: 10px; color: #aec8ed; background: rgba(122, 157, 207, .13); font-size: 8px; text-align: center; }
+.nexdesk-workspace-theme .nexdesk-history-list { position: relative; display: grid; gap: 8px; }
+.nexdesk-workspace-theme .nexdesk-history-item { position: relative; display: grid; grid-template-columns: 31px minmax(0, 1fr) auto; align-items: start; gap: 10px; padding: 13px; border: 1px solid #29436d; border-radius: 11px; background: linear-gradient(120deg, rgba(18, 39, 72, .96), rgba(13, 28, 53, .96)); box-shadow: inset 0 1px rgba(255, 255, 255, .025); transition: border-color .16s ease, transform .16s ease, background .16s ease; }
+.nexdesk-workspace-theme .nexdesk-history-item:hover { transform: translateY(-1px); border-color: #3c6399; background: linear-gradient(120deg, rgba(21, 46, 84, .98), rgba(14, 31, 58, .98)); }
+.nexdesk-workspace-theme .nexdesk-history-marker { position: relative; z-index: 1; display: grid; width: 29px; height: 29px; place-items: center; border: 1px solid rgba(75, 205, 151, .27); border-radius: 9px; color: #84e4bd; background: rgba(24, 143, 103, .14); }
+.nexdesk-workspace-theme .nexdesk-history-marker.cerrado { border-color: rgba(164, 141, 255, .29); color: #c2b3ff; background: rgba(103, 77, 200, .16); }
+.nexdesk-workspace-theme .nexdesk-history-item-main { min-width: 0; }
+.nexdesk-workspace-theme .nexdesk-history-item-topline { display: flex; align-items: center; gap: 7px; margin: 0 0 4px; }
+.nexdesk-workspace-theme .nexdesk-history-ticket-id { color: #8fa9ce; font-size: 8px; font-weight: 700; letter-spacing: .07em; }
+.nexdesk-workspace-theme .nexdesk-history-status { padding: 2px 7px; border: 1px solid rgba(63, 198, 139, .22); border-radius: 99px; color: #8ce2b9; background: rgba(22, 132, 91, .12); font-size: 8px; font-weight: 650; }
+.nexdesk-workspace-theme .nexdesk-history-status.cerrado { border-color: rgba(156, 133, 255, .26); color: #c0b1ff; background: rgba(103, 77, 200, .15); }
+.nexdesk-workspace-theme .nexdesk-history-item-main h2 { overflow: hidden; margin: 0 0 4px; color: #eff5ff; font-size: 12px; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+.nexdesk-workspace-theme .nexdesk-history-description { display: -webkit-box; overflow: hidden; margin: 0 0 8px; color: #a6b8d5; font-size: 9px; line-height: 1.45; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.nexdesk-workspace-theme .nexdesk-history-resolution { display: flex; gap: 6px; margin: 0 0 8px; padding: 6px 8px; border-left: 2px solid #42c99b; border-radius: 0 6px 6px 0; color: #b9d9d0; background: rgba(26, 127, 94, .1); font-size: 9px; }
+.nexdesk-workspace-theme .nexdesk-history-resolution strong { flex: 0 0 auto; color: #80dcb5; font-size: 8px; }
+.nexdesk-workspace-theme .nexdesk-history-resolution span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nexdesk-workspace-theme .nexdesk-history-item-meta { display: flex; flex-wrap: wrap; gap: 6px 14px; color: #91a8cb; font-size: 8px; }
+.nexdesk-workspace-theme .nexdesk-history-item-meta > span { display: inline-flex; align-items: center; gap: 5px; }
+.nexdesk-workspace-theme .nexdesk-history-item-meta svg { color: #76a9e6; }
+.nexdesk-workspace-theme .nexdesk-history-detail-button { display: inline-flex; min-height: 30px; align-items: center; gap: 7px; align-self: center; padding: 5px 9px; border: 1px solid #355783; border-radius: 7px; color: #c8deff; background: rgba(39, 82, 138, .17); font: inherit; font-size: 9px; white-space: nowrap; cursor: pointer; transition: color .16s ease, background .16s ease, border-color .16s ease; }
+.nexdesk-workspace-theme .nexdesk-history-detail-button:hover { border-color: #4f91d8; color: #fff; background: rgba(39, 117, 208, .25); }
+.nexdesk-workspace-theme .nexdesk-history-detail-button:focus-visible,
+.nexdesk-workspace-theme .nexdesk-history-filters button:focus-visible { outline: 2px solid #54a8ff; outline-offset: 2px; }
+.nexdesk-workspace-theme .nexdesk-history-empty { display: grid; min-height: 210px; justify-items: center; align-content: center; padding: 26px; border: 1px dashed #345078; border-radius: 11px; color: #9eb2d1; background: rgba(15, 31, 58, .62); text-align: center; }
+.nexdesk-workspace-theme .nexdesk-history-empty-icon { display: grid; width: 42px; height: 42px; place-items: center; margin-bottom: 10px; border: 1px solid #335786; border-radius: 13px; color: #8ccaff; background: rgba(41, 111, 194, .15); }
+.nexdesk-workspace-theme .nexdesk-history-empty h2 { margin: 0 0 4px; color: #e4edfc; font-size: 13px; font-weight: 650; }
+.nexdesk-workspace-theme .nexdesk-history-empty p { margin: 0; color: #94a9ca; font-size: 10px; }
+.nexdesk-workspace-theme .nexdesk-history-footer { padding: 9px 2px 0; color: #8ea5c8; font-size: 9px; }
+
+@media (max-width: 720px) {
+  .nexdesk-workspace-theme .nexdesk-history-toolbar { align-items: stretch; flex-direction: column; }
+  .nexdesk-workspace-theme .nexdesk-history-search { max-width: none; }
+  .nexdesk-workspace-theme .nexdesk-history-filters { justify-content: flex-start; }
+}
+
+@media (max-width: 520px) {
+  .nexdesk-workspace-theme .nexdesk-history-overview { gap: 6px; }
+  .nexdesk-workspace-theme .nexdesk-history-stat { min-height: 62px; gap: 6px; padding: 8px; }
+  .nexdesk-workspace-theme .nexdesk-history-stat-icon { width: 27px; height: 27px; flex-basis: 27px; }
+  .nexdesk-workspace-theme .nexdesk-history-stat small { font-size: 8px; }
+  .nexdesk-workspace-theme .nexdesk-history-stat strong { font-size: 15px; }
+  .nexdesk-workspace-theme .nexdesk-history-item { grid-template-columns: 27px minmax(0, 1fr); gap: 8px; padding: 10px; }
+  .nexdesk-workspace-theme .nexdesk-history-marker { width: 26px; height: 26px; }
+  .nexdesk-workspace-theme .nexdesk-history-detail-button { grid-column: 2; justify-self: start; }
+  .nexdesk-workspace-theme .nexdesk-history-item-meta { gap: 6px 10px; }
+  .nexdesk-workspace-theme .nexdesk-history-resolution { flex-direction: column; gap: 2px; }
+}
+
+/* Vistas propias para cada bandeja de usuario y tecnico */
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-heading { align-items: center !important; margin-bottom: 16px !important; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-title h1 { margin: 6px 0 3px; color: #f2f6ff; font-size: clamp(22px, 2.1vw, 28px); font-weight: 720; letter-spacing: -.55px; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-title p { margin: 0; color: #9eafd0; font-size: 10px; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-eyebrow { display: inline-flex; align-items: center; gap: 6px; color: #7dc4ff; font-size: 8px; font-weight: 750; letter-spacing: .13em; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-title.abiertas .nexdesk-workspace-ticket-eyebrow { color: #ffd17b; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-title.atencion .nexdesk-workspace-ticket-eyebrow { color: #70e2bd; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-title.asignados .nexdesk-workspace-ticket-eyebrow { color: #b6a2ff; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-refresh { display: inline-flex; align-items: center; gap: 7px; border: 1px solid #2c4976; color: #d5e6ff; background: #102242; font-size: 10px; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-refresh:hover { border-color: #4b82c9; color: #fff; background: #17315b; }
+.nexdesk-workspace-theme .nexdesk-workspace-tickets-view { max-width: 1160px; margin: 0 auto; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-overview { display: grid; grid-template-columns: 1.35fr repeat(3, minmax(0, 1fr)); gap: 9px; margin-bottom: 13px; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-overview > div { display: flex; min-height: 64px; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 12px; border: 1px solid #273f67; border-radius: 10px; background: linear-gradient(140deg, #13294c, #0e1e39); }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-overview > div > small,
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-overview-lead small { color: #9aafd0; font-size: 8px; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-overview > div > strong,
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-overview-lead strong { color: #eef5ff; font-size: 18px; line-height: 1; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-overview .nexdesk-workspace-ticket-overview-lead { justify-content: flex-start; gap: 9px; border-color: #315284; background: linear-gradient(115deg, rgba(30, 79, 143, .58), rgba(17, 37, 69, .95)); }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-overview-lead > span:last-child { display: flex; flex-direction: column; gap: 3px; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-overview-icon { display: grid; width: 33px; height: 33px; flex: 0 0 33px; place-items: center; border: 1px solid rgba(91, 171, 255, .23); border-radius: 9px; color: #8fcaff; background: rgba(37, 125, 219, .18); }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-tools { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 10px; color: #93a9ca; font-size: 9px; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-search { display: flex; width: min(100%, 360px); min-height: 33px; align-items: center; gap: 7px; padding: 0 9px; border: 1px solid #2a456f; border-radius: 8px; color: #89a5cf; background: #0c1b36; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-search:focus-within { border-color: #438ce0; box-shadow: 0 0 0 3px rgba(56, 132, 226, .11); }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-search input { width: 100%; min-width: 0; border: 0; outline: 0; color: #e9f2ff; background: transparent; font: inherit; font-size: 9px; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-search input::placeholder { color: #8298bb; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-card { min-width: 0; padding: 12px; border: 1px solid #2a456f; border-radius: 11px; background: linear-gradient(135deg, rgba(18, 39, 73, .96), rgba(13, 28, 54, .98)); transition: transform .16s ease, border-color .16s ease; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-card:hover { transform: translateY(-1px); border-color: #3d6499; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-card-top { display: flex; align-items: center; justify-content: space-between; gap: 7px; margin-bottom: 8px; color: #91a9ce; font-size: 8px; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-status { padding: 3px 7px; border: 1px solid rgba(60, 174, 218, .22); border-radius: 99px; color: #9bdfff; background: rgba(38, 128, 169, .13); font-size: 8px; font-weight: 650; white-space: nowrap; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-status.abierto { color: #ffd17b; border-color: rgba(245, 186, 75, .22); background: rgba(179, 123, 25, .12); }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-status.en_proceso { color: #7fe2c0; border-color: rgba(62, 197, 148, .22); background: rgba(24, 132, 96, .12); }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-status.resuelto { color: #9ee7bb; border-color: rgba(91, 198, 121, .22); background: rgba(54, 137, 76, .12); }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-status.cerrado { color: #c2b5ff; border-color: rgba(155, 133, 245, .22); background: rgba(103, 78, 193, .13); }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-card h2,
+.nexdesk-workspace-theme .nexdesk-open-ticket-copy h2,
+.nexdesk-workspace-theme .nexdesk-attention-card h2,
+.nexdesk-workspace-theme .nexdesk-assigned-ticket h2 { overflow: hidden; margin: 0 0 5px; color: #eff5ff; font-size: 11px; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-card > p,
+.nexdesk-workspace-theme .nexdesk-open-ticket-copy > p,
+.nexdesk-workspace-theme .nexdesk-attention-card > p,
+.nexdesk-workspace-theme .nexdesk-assigned-ticket > p { display: -webkit-box; overflow: hidden; margin: 0 0 9px; color: #a4b7d5; font-size: 9px; line-height: 1.45; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-card-meta { display: flex; align-items: center; gap: 10px; color: #8fa6c8; font-size: 8px; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-card-meta > span:last-child { display: inline-flex; align-items: center; gap: 4px; }
+.nexdesk-workspace-theme .nexdesk-workspace-priority { padding: 3px 7px; border-radius: 99px; color: #b8d7ff; background: rgba(69, 128, 203, .15); font-size: 8px; font-weight: 650; text-transform: capitalize; }
+.nexdesk-workspace-theme .nexdesk-workspace-priority.alta { color: #ffb5bd; background: rgba(190, 62, 80, .16); }
+.nexdesk-workspace-theme .nexdesk-workspace-priority.media { color: #ffdb91; background: rgba(178, 127, 27, .16); }
+.nexdesk-workspace-theme .nexdesk-workspace-priority.baja { color: #8ee2bb; background: rgba(37, 145, 96, .15); }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-card-actions,
+.nexdesk-workspace-theme .nexdesk-attention-card-footer > div,
+.nexdesk-workspace-theme .nexdesk-assigned-ticket-actions { display: flex; justify-content: flex-end; gap: 6px; margin-top: 10px; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-card-actions button,
+.nexdesk-workspace-theme .nexdesk-open-ticket-row > button,
+.nexdesk-workspace-theme .nexdesk-attention-card-footer button,
+.nexdesk-workspace-theme .nexdesk-assigned-ticket-actions button { min-height: 28px; padding: 4px 8px; border: 1px solid #355681; border-radius: 7px; color: #bed8fb; background: rgba(41, 80, 130, .15); font: inherit; font-size: 8px; cursor: pointer; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-card-actions button:hover,
+.nexdesk-workspace-theme .nexdesk-open-ticket-row > button:hover,
+.nexdesk-workspace-theme .nexdesk-attention-card-footer button:hover,
+.nexdesk-workspace-theme .nexdesk-assigned-ticket-actions button:hover { border-color: #4b8ed2; color: #fff; background: rgba(39, 117, 208, .23); }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-card-actions button.primary,
+.nexdesk-workspace-theme .nexdesk-attention-card-footer button.primary,
+.nexdesk-workspace-theme .nexdesk-assigned-ticket-actions button.primary { border-color: #3476bd; color: #eff7ff; background: linear-gradient(105deg, #176eb8, #354ec3); }
+.nexdesk-workspace-theme .nexdesk-open-ticket-banner { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; padding: 13px 15px; border: 1px solid rgba(191, 145, 54, .33); border-radius: 11px; background: linear-gradient(110deg, rgba(103, 74, 23, .3), rgba(39, 37, 34, .24)); }
+.nexdesk-workspace-theme .nexdesk-open-ticket-banner-icon { display: grid; width: 34px; height: 34px; flex: 0 0 34px; place-items: center; border: 1px solid rgba(243, 194, 87, .23); border-radius: 9px; color: #ffd47f; background: rgba(205, 148, 34, .13); }
+.nexdesk-workspace-theme .nexdesk-open-ticket-banner > span:nth-child(2) { display: flex; flex: 1; flex-direction: column; gap: 3px; }
+.nexdesk-workspace-theme .nexdesk-open-ticket-banner strong { color: #ffe4ac; font-size: 10px; }
+.nexdesk-workspace-theme .nexdesk-open-ticket-banner small { color: #c0b18f; font-size: 8px; }
+.nexdesk-workspace-theme .nexdesk-open-ticket-banner-count { color: #ffe3a1; font-size: 23px; font-weight: 700; }
+.nexdesk-workspace-theme .nexdesk-open-ticket-list { display: grid; gap: 7px; }
+.nexdesk-workspace-theme .nexdesk-open-ticket-row { display: grid; grid-template-columns: 36px minmax(0, 1fr) auto auto; align-items: center; gap: 10px; padding: 11px 12px; border: 1px solid #493f2c; border-left: 3px solid #d4a441; border-radius: 9px; background: linear-gradient(100deg, rgba(48, 40, 28, .5), rgba(15, 29, 51, .95) 35%); }
+.nexdesk-workspace-theme .nexdesk-open-ticket-number { display: grid; width: 34px; height: 34px; place-items: center; border: 1px solid rgba(238, 190, 87, .19); border-radius: 9px; color: #f4d28d; background: rgba(190, 136, 35, .13); font-size: 9px; font-weight: 700; }
+.nexdesk-workspace-theme .nexdesk-open-ticket-copy { min-width: 0; }
+.nexdesk-workspace-theme .nexdesk-open-ticket-copy > div { display: flex; align-items: center; gap: 8px; }
+.nexdesk-workspace-theme .nexdesk-open-ticket-copy h2 { margin-bottom: 3px; }
+.nexdesk-workspace-theme .nexdesk-open-ticket-copy > div > span { color: #f0c56e; font-size: 7px; white-space: nowrap; }
+.nexdesk-workspace-theme .nexdesk-open-ticket-copy > p { margin-bottom: 4px; }
+.nexdesk-workspace-theme .nexdesk-open-ticket-copy > small { color: #8fa3c1; font-size: 8px; }
+.nexdesk-workspace-theme .nexdesk-attention-banner { display: grid; grid-template-columns: 12px auto 1fr; align-items: center; gap: 8px; margin: 0 0 11px; padding: 10px 13px; border: 1px solid rgba(61, 166, 131, .28); border-radius: 10px; background: linear-gradient(100deg, rgba(22, 84, 68, .32), rgba(15, 34, 53, .75)); }
+.nexdesk-workspace-theme .nexdesk-attention-pulse { width: 8px; height: 8px; border-radius: 50%; background: #67dfb1; box-shadow: 0 0 0 4px rgba(83, 219, 169, .1), 0 0 12px rgba(83, 219, 169, .56); }
+.nexdesk-workspace-theme .nexdesk-attention-banner > div { display: flex; flex-direction: column; gap: 2px; }
+.nexdesk-workspace-theme .nexdesk-attention-banner small { color: #75d8b3; font-size: 7px; font-weight: 750; letter-spacing: .12em; }
+.nexdesk-workspace-theme .nexdesk-attention-banner strong { color: #e2fff3; font-size: 10px; }
+.nexdesk-workspace-theme .nexdesk-attention-banner p { margin: 0; color: #9dc8ba; font-size: 8px; text-align: right; }
+.nexdesk-workspace-theme .nexdesk-attention-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+.nexdesk-workspace-theme .nexdesk-attention-card { padding: 12px; border: 1px solid #285345; border-radius: 10px; background: linear-gradient(135deg, rgba(16, 52, 49, .65), rgba(13, 29, 51, .98) 58%); }
+.nexdesk-workspace-theme .nexdesk-attention-card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; color: #86c9b4; font-size: 8px; }
+.nexdesk-workspace-theme .nexdesk-attention-progress { margin: 11px 0 9px; }
+.nexdesk-workspace-theme .nexdesk-attention-progress-line { height: 4px; overflow: hidden; border-radius: 99px; background: #263c4c; }
+.nexdesk-workspace-theme .nexdesk-attention-progress-line span { display: block; width: 68%; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #34bd9a, #81e1bb); box-shadow: 0 0 10px rgba(83, 219, 169, .24); }
+.nexdesk-workspace-theme .nexdesk-attention-stages { display: flex; justify-content: space-between; gap: 4px; margin-top: 6px; color: #718d91; font-size: 7px; }
+.nexdesk-workspace-theme .nexdesk-attention-stages .completado { color: #80cdb2; }
+.nexdesk-workspace-theme .nexdesk-attention-stages .actual { color: #b3f3d9; font-weight: 700; }
+.nexdesk-workspace-theme .nexdesk-attention-card-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-top: 8px; border-top: 1px solid rgba(93, 157, 138, .16); color: #88aaa4; font-size: 8px; }
+.nexdesk-workspace-theme .nexdesk-attention-card-footer > span { display: inline-flex; align-items: center; gap: 5px; }
+.nexdesk-workspace-theme .nexdesk-attention-card-footer > div { margin-top: 0; }
+.nexdesk-workspace-theme .nexdesk-assigned-queue-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 11px; padding: 10px 12px; border: 1px solid #443b68; border-radius: 10px; background: linear-gradient(105deg, rgba(69, 52, 121, .33), rgba(18, 31, 57, .8)); }
+.nexdesk-workspace-theme .nexdesk-assigned-queue-heading > span { display: flex; flex-direction: column; gap: 3px; }
+.nexdesk-workspace-theme .nexdesk-assigned-queue-heading small { color: #b3a2ff; font-size: 7px; font-weight: 750; letter-spacing: .12em; }
+.nexdesk-workspace-theme .nexdesk-assigned-queue-heading strong { color: #f1ecff; font-size: 10px; }
+.nexdesk-workspace-theme .nexdesk-assigned-queue-heading b { color: #d3c8ff; font-size: 16px; }
+.nexdesk-workspace-theme .nexdesk-assigned-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+.nexdesk-workspace-theme .nexdesk-assigned-ticket { padding: 12px; border: 1px solid #3b3562; border-radius: 10px; background: linear-gradient(135deg, rgba(44, 35, 78, .55), rgba(15, 29, 53, .97) 60%); }
+.nexdesk-workspace-theme .nexdesk-assigned-ticket-priority { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; color: #ae9fec; font-size: 7px; font-weight: 700; letter-spacing: .06em; }
+.nexdesk-workspace-theme .nexdesk-assigned-ticket-meta { display: flex; flex-wrap: wrap; gap: 8px 13px; color: #98a8c5; font-size: 8px; }
+.nexdesk-workspace-theme .nexdesk-assigned-ticket-meta span { display: inline-flex; align-items: center; gap: 5px; }
+.nexdesk-workspace-theme .nexdesk-assigned-ticket-meta svg { color: #b09cff; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-empty { display: grid; min-height: 190px; justify-items: center; align-content: center; gap: 6px; padding: 24px; border: 1px dashed #304a72; border-radius: 11px; color: #8fcaff; background: rgba(15, 31, 58, .58); text-align: center; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-empty strong { color: #e4edfc; font-size: 12px; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-empty span { color: #95aaca; font-size: 9px; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-empty.abiertas { color: #ffd17b; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-empty.atencion { color: #78dfbd; }
+.nexdesk-workspace-theme .nexdesk-workspace-ticket-empty.asignados { color: #b6a2ff; }
+
+@media (max-width: 850px) {
+  .nexdesk-workspace-theme .nexdesk-workspace-ticket-overview { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .nexdesk-workspace-theme .nexdesk-workspace-ticket-overview-lead { grid-column: 1 / -1; }
+  .nexdesk-workspace-theme .nexdesk-open-ticket-row { grid-template-columns: 34px minmax(0, 1fr) auto; }
+  .nexdesk-workspace-theme .nexdesk-open-ticket-row > button { grid-column: 2 / 4; justify-self: start; }
+}
+
+@media (max-width: 600px) {
+  .nexdesk-workspace-theme .nexdesk-workspace-ticket-heading { align-items: flex-start !important; }
+  .nexdesk-workspace-theme .nexdesk-workspace-ticket-grid,
+  .nexdesk-workspace-theme .nexdesk-attention-list,
+  .nexdesk-workspace-theme .nexdesk-assigned-list { grid-template-columns: minmax(0, 1fr); }
+  .nexdesk-workspace-theme .nexdesk-workspace-ticket-tools { align-items: stretch; flex-direction: column; gap: 6px; }
+  .nexdesk-workspace-theme .nexdesk-workspace-ticket-search { width: 100%; }
+  .nexdesk-workspace-theme .nexdesk-open-ticket-row { grid-template-columns: 31px minmax(0, 1fr); gap: 8px; }
+  .nexdesk-workspace-theme .nexdesk-open-ticket-row > .nexdesk-workspace-priority { grid-column: 2; justify-self: start; }
+  .nexdesk-workspace-theme .nexdesk-open-ticket-row > button { grid-column: 2; }
+  .nexdesk-workspace-theme .nexdesk-open-ticket-copy > div { align-items: flex-start; flex-direction: column; gap: 2px; }
+  .nexdesk-workspace-theme .nexdesk-attention-banner { grid-template-columns: 12px auto; }
+  .nexdesk-workspace-theme .nexdesk-attention-banner p { grid-column: 2; text-align: left; }
+  .nexdesk-workspace-theme .nexdesk-attention-card-footer { align-items: flex-start; flex-direction: column; }
+  .nexdesk-workspace-theme .nexdesk-attention-card-footer > div { justify-content: flex-start; }
+}
+
+/* Identidad VORTIX compartida en los paneles */
+.nexdesk-workspace-theme .nexdesk-sidebar-brand {
+  min-height: 61px;
+  gap: 10px;
+  padding: 10px 14px;
+  color: #fff;
+  text-decoration: none;
+  border-bottom-color: #202b49;
+}
+.nexdesk-workspace-theme .nexdesk-brand-icon {
+  width: 31px;
+  height: 31px;
+  flex: 0 0 31px;
+  border: 0;
+  border-radius: 10px;
+  color: #fff;
+  background: linear-gradient(145deg, #a25aff, #5637ed 70%);
+  box-shadow: 0 5px 18px rgba(120, 71, 255, .4);
+  font-size: 19px;
+}
+.nexdesk-workspace-theme .nexdesk-brand-copy strong { color: #f8f8ff; font-size: 14px; letter-spacing: .25px; }
+.nexdesk-workspace-theme .nexdesk-brand-copy small { margin-top: 1px; color: #97a4c2; font-size: 9px; white-space: nowrap; }
+
+.nexdesk-profile-avatar {
+  position: relative;
+  display: grid;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(126, 172, 236, .25);
+  border-radius: 50%;
+  color: #fff;
+  background: linear-gradient(145deg, #359cf4, #594be8);
+  box-shadow: 0 3px 10px rgba(2, 10, 30, .2);
+  font-size: 12px;
+  font-weight: 700;
+}
+.nexdesk-profile-avatar-fallback { display: grid; width: 100%; height: 100%; place-items: center; }
+.nexdesk-profile-avatar img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; border-radius: inherit; object-fit: cover; }
+.nexdesk-profile-avatar img[hidden] { display: none; }
+.nexdesk-person-name { display: flex; min-width: 0; align-items: center; gap: 9px; }
+.nexdesk-person-name > span:last-child { display: flex; min-width: 0; flex-direction: column; gap: 2px; }
+.nexdesk-person-name strong,
+.nexdesk-person-name .fw-semibold { overflow: hidden; color: #e9f1ff; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.nexdesk-person-name small { overflow: hidden; font-size: 8px; text-overflow: ellipsis; white-space: nowrap; }
+.nexdesk-workspace-theme .nexdesk-workspace-nav-intro-avatar { width: 29px; height: 29px; flex-basis: 29px; border: 1px solid rgba(103, 179, 255, .24); border-radius: 8px; font-size: 10px; }
